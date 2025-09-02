@@ -12,7 +12,8 @@ Ajudar o usuário a ganhar consistência em hábitos que impactam o emagreciment
 
 Pessoas que querem emagrecer com hábitos diários (iniciante a intermediário), sem dietas extremas.
 
-## Design das Telas - Figma:
+## Design das Telas - Figma: 
+### Em andamento
 
 https://www.figma.com/design/nU9CPcXy2UOZo5k63KLd14/Gestor-de-H%C3%A1bitos---FitTrack?node-id=0-1&t=Y0BHTYdTWUM31EGW-1
 

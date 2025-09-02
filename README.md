@@ -7,7 +7,7 @@ Ajudar o usuário a ganhar consistência em hábitos que impactam o emagreciment
 
 *Público-alvo*
 
-Pessoas que querem emagrecer com hábitos diários (iniciante a intermediário), sem dietas extremas.
+[ ]Pessoas que querem emagrecer com hábitos diários (iniciante a intermediário), sem dietas extremas.
 
 # Design das Telas - Figma:
 

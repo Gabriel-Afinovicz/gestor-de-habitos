@@ -8,7 +8,7 @@ Aplicação web responsiva para criar, monitorar e manter hábitos saudáveis li
 
 Ajudar o usuário a ganhar consistência em hábitos que impactam o emagrecimento de forma sustentável, oferecendo feedback visual (percentuais, metas diárias, streaks) e relatórios simples.
 
-*Público-alvo*
+#### Público-alvo
 
 Pessoas que querem emagrecer com hábitos diários (iniciante a intermediário), sem dietas extremas.
 

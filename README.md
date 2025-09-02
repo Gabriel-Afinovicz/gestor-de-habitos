@@ -1,27 +1,28 @@
 # Gestor de Hábitos
+##Autor: Gabriel Afinovicz
 Aplicação web responsiva para criar, monitorar e manter hábitos saudáveis ligados a emagrecimento (água, sono, passos, treino, alimentação consciente). O usuário cadastra hábitos, registra o que fez no dia, acompanha progresso, gráficos, com validação de formulários. Design limpo, foco em usabilidade e acessibilidade.
 
-*Objetivo*
+####Objetivo
 
 Ajudar o usuário a ganhar consistência em hábitos que impactam o emagrecimento de forma sustentável, oferecendo feedback visual (percentuais, metas diárias, streaks) e relatórios simples.
 
-*Público-alvo*
+####Público-alvo
 
 Pessoas que querem emagrecer com hábitos diários (iniciante a intermediário), sem dietas extremas.
 
-# Design das Telas - Figma:
+## Design das Telas - Figma:
 
 https://www.figma.com/design/nU9CPcXy2UOZo5k63KLd14/Gestor-de-H%C3%A1bitos---FitTrack?node-id=0-1&t=gbPBhaP7BSXcQ3vN-1
 
-# Design System:
+## Design System:
 
-# Site em Produção - GitHub Pages
+## Site em Produção - GitHub Pages
 
-# Framework CSS
+## Framework CSS
 
-# Dependências JavaScript
+## Dependências JavaScript
 
-# Checklist | Indicadores de Desempenho (ID) dos Resultados de Aprendizagem (RA)
+## Checklist | Indicadores de Desempenho (ID) dos Resultados de Aprendizagem (RA)
 
 #### RA1 - Utilizar Frameworks CSS para estilização de elementos HTML e criação de layouts responsivos.
 - [ ] ID0 - Prototipa interfaces adaptáveis para no mínimo os tamanhos de tela mobile e desktop, usando ferramentas de design como Figma, Quant UX ou Sketch.

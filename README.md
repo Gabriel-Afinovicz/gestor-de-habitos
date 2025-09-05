@@ -22,6 +22,7 @@ https://www.figma.com/design/nU9CPcXy2UOZo5k63KLd14/Gestor-de-H%C3%A1bitos---Fit
 ## Site em Produção - GitHub Pages
 
 ## Framework CSS
+Materialize
 
 ## Dependências JavaScript
 

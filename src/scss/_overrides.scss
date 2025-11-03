@@ -1,0 +1,52 @@
+// -------------------------------------------------------------
+// Projeto Roni — Ajustes finos e exemplos pro checklist
+// - Unidades relativas (ID 05)
+// - Tipografia/ritmo (usa .flow-text no HTML — ver docs Materialize)
+// - Seção com CSS Grid PURO (ID 03)
+// - Utilitários simples
+// -------------------------------------------------------------
+
+/* Layout fluido (ID 05) */
+html { font-size: 100%; }               /* base relativa */
+.section { padding: clamp(2rem, 3vw, 4rem) 0; }
+.container { width: min(90vw, 70rem); } /* %, vw e largura máxima */
+
+/* Tipografia responsiva
+ * Use a classe .flow-text diretamente no HTML para textos que escalam.
+ * (classe nativa do Materialize)
+ */
+
+/* Imagens — combine com .responsive-img no HTML (ID 09) */
+img.rounded { border-radius: .75rem; }
+img.shadow  { box-shadow: 0 6px 24px rgba(0,0,0,.12); }
+
+/* Grade com CSS PURO (ID 03)  */
+.galeria-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* Cartão de destaque sem JS (ex.: para hábitos) */
+.card--roni {
+  border-radius: 1rem;
+  overflow: hidden;
+  .card-content { padding: 1.25rem; }
+}
+
+/* Acessibilidade: foco visível e coerente com a marca */
+:focus {
+  outline: 3px solid $primary-color;
+  outline-offset: 3px;
+}
+
+/* Espaçamentos utilitários */
+.mt-1 { margin-top: .5rem !important; }
+.mt-2 { margin-top: 1rem !important; }
+.mb-2 { margin-bottom: 1rem !important; }
+.p-2  { padding: 1rem !important; }
+
+/* Footer mais compacto em mobile */
+@media (max-width: 600px) {
+  footer.page-footer .container { padding: 0 1rem; }
+}

@@ -1,8 +1,36 @@
 {
+  "name": "gestor-habitos",
+  "version": "1.0.0",
+  "description": "Gestor de Hábitos para Emagrecimento (UTFPR) - Materialize + jQuery",
+  "main": "index.js",
+  "homepage": "https://gabriel-afinovicz.github.io/gestor-de-habitos/",
+  "scripts": {
+    "dev": "sass src/scss:css --watch",
+    "build": "sass src/scss:css --style=compressed && postcss css/*.css -u autoprefixer -r",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d ."
+  },
+  "keywords": [],
+  "author": "Gabriel Afinovicz",
+  "license": "ISC",
   "dependencies": {
-    "jquery": "^3.7.1"
+    "bootstrap": "^5.3.8",
+    "express": "^5.1.0",
+    "jquery": "^3.7.1",
+    "materialize-css": "^1.0.0"
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "autoprefixer": "^10.4.21",
+    "gh-pages": "^6.3.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "sass": "^1.93.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gabriel-Afinovicz/gestor-de-habitos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Gabriel-Afinovicz/gestor-de-habitos/issues"
   }
 }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FitHabit — Perfil</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+    <link rel="stylesheet" href="assets/css/materialize.custom.css" />
+  </head>
+  <body>
+    <header class="navbar-fixed">
+      <nav class="white" role="navigation" aria-label="Principal">
+        <div class="nav-wrapper container">
+          <a href="index.html" class="brand-logo left">
+            <img src="assets/img/logo-fithabit.png" alt="FitHabit" class="nav-logo responsive-img" width="120" height="32" loading="eager">
+          </a>
+          <span class="mobile-page-title hide-on-med-and-up">Perfil</span>
+          
+          <ul class="right hide-on-med-and-down">
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="habitos.html">Hábitos</a></li>
+            <li><a href="relatorios.html">Relatórios</a></li>
+            
+            <li><a class="nav-link-active" href="perfil.html"><img alt="avatar" src="https://i.pravatar.cc/32?img=5" style="border-radius:50%" width="32" height="32" loading="lazy" /></a></li>
+          </ul>
+        </div>
+      </nav>
+      
+    </header>
+
+    <main class="container" style="padding-top:2rem;">
+      <section class="center-align" style="margin-bottom:2rem;">
+        <img src="https://i.pravatar.cc/160?img=5" alt="Avatar" style="border-radius:50%; width:120px; height:120px;" />
+        <h1 style="margin:.75rem 0 0 0;">Sofia Oliveira</h1>
+        <p class="text-sub" style="margin:.25rem 0; color:#16a34a;">Entusiasta de fitness e bem-estar</p>
+        <div class="card" style="display:inline-block; border-radius:12px; background:#EDF2F7; box-shadow:none;">
+          <div class="card-content" style="padding:.75rem 1.5rem;">
+            <strong>Editar Perfil</strong>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-bottom:1.5rem;">
+        <h5>Estatísticas</h5>
+        <div class="row">
+          <div class="col s12 m4">
+            <div class="card" style="border:1px solid #E5E7EB; border-radius:14px; box-shadow:none;">
+              <div class="card-content center-align">
+                <div class="use-tnum" style="font-size:2rem; font-weight:700;">150</div>
+                <div class="text-sub" style="margin-top:.25rem;">Dias de treino</div>
+              </div>
+            </div>
+          </div>
+          <div class="col s12 m4">
+            <div class="card" style="border:1px solid #E5E7EB; border-radius:14px; box-shadow:none;">
+              <div class="card-content center-align">
+                <div class="use-tnum" style="font-size:2rem; font-weight:700;">30</div>
+                <div class="text-sub" style="margin-top:.25rem;">Hábitos rastreados</div>
+              </div>
+            </div>
+          </div>
+          <div class="col s12 m4">
+            <div class="card" style="border:1px solid #E5E7EB; border-radius:14px; box-shadow:none;">
+              <div class="card-content center-align">
+                <div class="use-tnum" style="font-size:2rem; font-weight:700;">10</div>
+                <div class="text-sub" style="margin-top:.25rem;">Conquistas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h5>Hábitos Ativos</h5>
+        <div class="card hoverable">
+          <div class="card-content" style="display:flex; align-items:center; gap:1rem;">
+            <div style="flex:1 1 auto;">
+              <div class="text-sub">Manhã</div>
+              <div style="font-weight:600;">Corrida matinal</div>
+              <div class="text-sub">30 minutos de corrida leve</div>
+              <div style="margin-top:.5rem;"><button class="btn waves-effect" data-mark-done><i class="material-icons-round left">check_circle</i>Marcar concluído</button></div>
+            </div>
+            <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=600&auto=format&fit=crop" alt="thumb" style="border-radius:.75rem; width:280px; height:140px; object-fit:cover;" />
+          </div>
+        </div>
+
+        <div class="card hoverable">
+          <div class="card-content" style="display:flex; align-items:center; gap:1rem;">
+            <div style="flex:1 1 auto;">
+              <div class="text-sub">Tarde</div>
+              <div style="font-weight:600;">Meditação</div>
+              <div class="text-sub">15 minutos de meditação guiada</div>
+              <div style="margin-top:.5rem;"><button class="btn waves-effect" data-mark-done><i class="material-icons-round left">check_circle</i>Marcar concluído</button></div>
+            </div>
+            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=600&auto=format&fit=crop" alt="thumb" style="border-radius:.75rem; width:280px; height:140px; object-fit:cover;" />
+          </div>
+        </div>
+      </section>
+
+      <div class="section" aria-live="polite"></div>
+    </main>
+
+    <!-- Bottom Navigation (mobile only) -->
+    <nav class="mobile-bottom-nav hide-on-med-and-up">
+      <div class="container mb-wrap">
+        <a href="index.html"><i class="material-icons">home</i><span>Dashboard</span></a>
+        <a href="habitos.html"><i class="material-icons">list</i><span>Hábitos</span></a>
+        <a href="relatorios.html"><i class="material-icons">calendar_today</i><span>Relatórios</span></a>
+        <a href="perfil.html" class="active"><i class="material-icons">person</i><span>Perfil</span></a>
+      </div>
+    </nav>
+    
+  </body>
+</html>
+
+

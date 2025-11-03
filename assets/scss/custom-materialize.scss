@@ -1,0 +1,78 @@
+// FitHabit — Tema Materialize via SASS (compilado -> assets/css/materialize.custom.css)
+// 1) Importa helpers de cor antes para habilitar funções como color()
+@import "../../node_modules/materialize-css/sass/components/color-variables";
+@import "../../node_modules/materialize-css/sass/components/color-classes";
+
+// 2) Overrides de variáveis (antes do framework)
+$primary-color: #2DDC9A !default; // Primária: energia/progresso
+$secondary-color: #0A2419 !default; // Texto base/acentos escuros
+$success-color: #22C55E !default;
+$warning-color: #F59E0B !default;
+$error-color:   #EF4444 !default;
+$info-color:    #0EA5E9 !default;
+
+// Tipografia
+$roboto-font-path: "../../node_modules/materialize-css/dist/fonts/roboto/" !default; // exigência do Materialize
+$font-primary: 'Inter', 'Manrope', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+// Raio, sombras e foco
+$button-border-radius: .75rem !default;
+$card-border-radius:   1rem !default;
+$input-border-radius:  .5rem !default;
+$toast-border-radius:  .5rem !default;
+$collection-border-radius: .75rem !default;
+$sidenav-bg-color: #FFFFFF !default;
+$box-shadow-1: 0 6px 16px rgba(10,36,25,.08) !default;
+$box-shadow-2: 0 16px 40px rgba(10,36,25,.10) !default;
+$input-focus-color: $primary-color !default;
+$input-focus-border-color: $primary-color !default;
+
+// 3) Importa o framework já com as variáveis aplicadas
+@import "../../node_modules/materialize-css/sass/materialize";
+
+// 4) Ajustes finos e utilitários do tema
+html { font-family: $font-primary; }
+body { color: #0A2419; background-color: #F8FAFC; }
+
+// Números com alinhamento tabular
+.use-tnum { font-feature-settings: "tnum"; }
+
+.navbar-fixed .nav-wrapper { box-shadow: $box-shadow-1; }
+.card { border-radius: $card-border-radius; box-shadow: $box-shadow-1; }
+.card.hoverable:hover { box-shadow: $box-shadow-2; }
+.btn, .btn-large, .btn-small { border-radius: $button-border-radius; }
+.progress { background: #E5E7EB; height: 10px; }
+.progress .determinate { background-color: $primary-color; }
+.chip { background-color: rgba($primary-color, .12); color: $secondary-color; }
+.chip .material-icons { color: $primary-color; }
+
+// Tabela
+table.striped>tbody>tr:nth-child(odd) { background-color: #F8FAFC; }
+table.highlight>tbody>tr:hover { background-color: rgba($primary-color,.08); }
+
+// Inputs
+input[type="text"], input[type="time"], select { border-radius: $input-border-radius; }
+input:focus, textarea:focus, select:focus { border-bottom: 1px solid $input-focus-border-color !important; box-shadow: 0 1px 0 0 $input-focus-border-color !important; }
+
+// Indicador de link ativo na navbar
+.nav-link-active { position: relative; }
+.nav-link-active::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -10px; height: 3px;
+  background: $primary-color; border-radius: 2px;
+}
+
+// Estados
+.text-success { color: $success-color !important; }
+.text-warning { color: $warning-color !important; }
+.text-error   { color: $error-color   !important; }
+.text-info    { color: $info-color    !important; }
+
+// Skeletons simples
+.skeleton { position: relative; overflow: hidden; background: #E5E7EB; border-radius: .5rem; }
+.skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+  animation: shimmer 1.25s infinite; }
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+
+

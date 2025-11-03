@@ -1,0 +1,15 @@
+:root {
+  --bs-primary: #ff5733;         /* Cor primária da atividade */
+  --bs-primary-rgb: 255, 87, 51; /* RGB correspondente */
+  --bs-secondary: #33aaff;       /* Cor secundária */
+}
+
+.custom-card {
+  background-color: var(--bs-secondary);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+/* só para dar um respiro visual geral */
+body { min-height: 100vh; }

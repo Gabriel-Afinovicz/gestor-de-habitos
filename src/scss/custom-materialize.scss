@@ -1,0 +1,60 @@
+// -------------------------------------------------------------
+// Projeto Roni — Tema com Materialize + Sass
+// - Importa helpers de cor do Materialize
+// - Define variáveis do tema (overrides) ANTES do framework
+// - Importa o framework já aplicando as suas cores
+// - Carrega ajustes próprios em `_overrides.scss`
+// -------------------------------------------------------------
+
+// 1) Helpers de cor (habilita a função color("teal", "lighten-2") etc.)
+@import "../../node_modules/materialize-css/sass/components/color-variables";
+@import "../../node_modules/materialize-css/sass/components/color-classes";
+
+// 2) OVERRIDES DO TEMA (antes do import principal por causa do !default)
+
+// Paleta Roni
+$primary: #2ddc9a; // verde menta
+$secondary: #0a2419; // verde petróleo profundo
+$accent: #26a69a; // teal base (apoio em estados/links)
+$danger: #ff5252; // vermelho (feedback de erro)
+$success: #00c853; // verde sucesso
+
+// Cores do Materialize (sobrescrevem as defaults)
+$primary-color: $primary !default;
+$secondary-color: $secondary !default;
+$success-color: $success !default;
+$error-color: $danger !default;
+$link-color: $accent !default;
+
+// Derivações (se não definidas, o Materialize usa lighten/darken internamente)
+$primary-color-light: lighten($primary-color, 14%);
+$primary-color-dark: darken($primary-color, 14%);
+
+// Tipografia (ex.: base e destaque — opcional)
+// $font-stack: 'Inter', 'Roboto', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+// html { font-family: $font-stack; } // você também pode fazer no _overrides.scss
+
+// 3) Importa TODO o Materialize já com suas variáveis aplicadas
+@import "../../node_modules/materialize-css/sass/materialize";
+
+// 4) Utilitários adicionais de cor (úteis quando o color() não cobre hex)
+// Obs.: O Materialize já tem classes de cor quando usamos a paleta material,
+// mas aqui criamos utilitários próprios para as cores hex do Roni.
+.bg-primary   { background-color: $primary-color !important; }
+.bg-secondary { background-color: $secondary-color !important; }
+.text-primary { color: $primary-color !important; }
+.text-secondary { color: $secondary-color !important; }
+.border-primary { border-color: $primary-color !important; }
+
+// Botões com contraste sólido (opcional)
+.btn-primary {
+  background-color: $primary-color !important;
+  color: if(contrast($primary-color) == lightness(#000), #000, #fff) !important;
+}
+.btn-secondary {
+  background-color: $secondary-color !important;
+  color: #fff !important;
+}
+
+// 5) Ajustes próprios
+@import "./_overrides";

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FitHabit — Hábitos</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+    <!-- Seu tema compilado (Materialize + Sass) -->
+    <link rel="stylesheet" href="assets/css/materialize.custom.css" />
+
+    <!-- Ajustes visuais para aproximar do Figma -->
+    <style>
+      /* fundo clarinho */
+      body { background: #f7fafc; }
+
+      /* navbar: garante altura/posição da logo */
+      nav .brand-logo { display:flex; align-items:center; height:64px; left:0; transform:none; }
+      nav .brand-logo .nav-logo { height:40px; width:auto; display:block; }
+      @media (max-width:600px){ nav .brand-logo .nav-logo { height:44px; } }
+
+      /* títulos e espaçamentos */
+      main.container { padding-top: 2rem; }
+      h1 { margin: 2rem 0 1rem; }
+
+      /* cards “macios” */
+      .card-rounded { border-radius: 14px; overflow: hidden; }
+      .card-elev { box-shadow: 0 8px 24px rgba(2, 8, 20, 0.06); }
+
+      /* cartões específicos */
+      .form-card .card-content { padding: 1.5rem; }
+      .table-card .card-content { padding: 0; }
+      .table-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid #eef2f6; }
+      .table-wrap { padding: .5rem 1rem 1rem; }
+
+      /* tabela limpa */
+      .table-clean th { color:#0a2419; font-weight:700; }
+      .table-clean th, .table-clean td { padding: 1rem 1.25rem; }
+      .table-clean tr { border-bottom: 1px solid #eef2f6; }
+      .table-clean tr:last-child { border-bottom: 0; }
+
+      /* chip verdinho para “Diariamente” */
+      .chip.linkish { background:#ecfdf5; color:#08916f; font-weight:600; }
+
+      /* links de ação */
+      .action-link { color:#0a2419; opacity:.75; }
+      .action-link:hover { opacity:1; text-decoration: underline; }
+
+      /* ícone do date alinhado ao input */
+      .input-field .prefix { top: 0.25rem; }
+
+      @media (max-width: 992px){
+        .form-card { margin-bottom: 1.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar-fixed">
+      <nav class="white" role="navigation" aria-label="Principal">
+        <div class="nav-wrapper container">
+          <a href="index.html" class="brand-logo left">
+            <!-- prefira o SVG para nitidez; mantenha o PNG se for o que você tem -->
+            <img src="assets/img/logo-fithabit.png" alt="FitHabit" class="nav-logo responsive-img" width="120" height="32" loading="eager">
+          </a>
+          <span class="mobile-page-title hide-on-med-and-up">Hábitos</span>
+          <ul class="right hide-on-med-and-down">
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a class="nav-link-active" href="habitos.html">Hábitos</a></li>
+            <li><a href="relatorios.html">Relatórios</a></li>
+            <li><a href="perfil.html"><img alt="avatar" src="https://i.pravatar.cc/32?img=5" style="border-radius:50%" width="32" height="32" loading="lazy" /></a></li>
+          </ul>
+        </div>
+      </nav>
+      
+    </header>
+
+    <main class="container">
+      <h1>Hábitos</h1>
+
+      <div class="row" role="region" aria-label="Gestão de hábitos">
+        <!-- Coluna esquerda: FORM em CARD -->
+        <aside class="col s12 m4 l3" aria-label="Criar novo hábito">
+          <div class="card form-card card-rounded card-elev">
+            <div class="card-content">
+              <span class="card-title" style="margin-bottom:1rem;">Criar Novo Hábito</span>
+        
+              <form id="create-habit-form" aria-label="Criar Hábito">
+                <!-- Nome do Hábito -->
+                <div class="input-field">
+                  <label for="name" class="active">Nome do Hábito</label>
+                  <input id="name" name="name" type="text" class="validate" required placeholder="" />
+                  <span class="helper-text" aria-live="polite"></span>
+                </div>
+        
+                <!-- Frequência (agora é input de texto) -->
+                <div class="input-field">
+                  <label for="frequency" class="active">Frequência</label>
+                  <input id="frequency" name="frequency" type="text" class="validate" required placeholder="" />
+                  <span class="helper-text" aria-live="polite"></span>
+                </div>
+        
+                <!-- Objetivo -->
+                <div class="input-field">
+                  <label for="goal" class="active">Objetivo</label>
+                  <input id="goal" name="goal" type="text" class="validate" required placeholder="" />
+                  <span class="helper-text" aria-live="polite"></span>
+                </div>
+        
+                <div class="input-field" style="margin-top:1rem;">
+                  <button class="btn waves-effect" type="submit">
+                    <i class="material-icons-round left">save</i>SALVAR
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </aside>
+        
+
+        <!-- Coluna direita: TABELA em CARD -->
+        <section class="col s12 m8 l9" aria-label="Lista de hábitos">
+          <div class="card table-card card-rounded card-elev">
+            <div class="table-head">
+              <span class="flow-text" style="font-weight:700;">Hábitos</span>
+            </div>
+            <div class="card-content">
+              <div class="table-wrap">
+                <table id="habits-table" class="highlight responsive-table table-clean">
+                  <thead>
+                    <tr>
+                      <th>Hábito</th>
+                      <th>Frequência</th>
+                      <th>Objetivo</th>
+                      <th class="right-align" scope="col">Ação</th>
+                    </tr>
+                  </thead>
+                  <tbody id="habits-tbody">
+                    <!-- linhas serão injetadas pelo JS -->
+                    <!-- Exemplo de linha (caso queira visualizar layout sem JS):
+                    <tr>
+                      <td>Beber 8 copos de água</td>
+                      <td>Hoje</td>
+                      <td><span class="chip linkish">Diariamente</span></td>
+                      <td>8 copos</td>
+                      <td class="right-align">
+                        <a href="#!" class="action-link">Editar</a> |
+                        <a href="#!" class="action-link">Deletar</a>
+                      </td>
+                    </tr>
+                    -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="section" aria-live="polite"></div>
+    </main>
+
+    <!-- Bottom Navigation (mobile only) -->
+    <nav class="mobile-bottom-nav hide-on-med-and-up">
+      <div class="container mb-wrap">
+        <a href="index.html"><i class="material-icons">home</i><span>Dashboard</span></a>
+        <a href="habitos.html" class="active"><i class="material-icons">list</i><span>Hábitos</span></a>
+        <a href="relatorios.html"><i class="material-icons">calendar_today</i><span>Relatórios</span></a>
+        <a href="perfil.html"><i class="material-icons">person</i><span>Perfil</span></a>
+      </div>
+    </nav>
+    
+  </body>
+</html>

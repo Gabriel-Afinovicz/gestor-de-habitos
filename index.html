@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FitHabit — Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+    <link rel="stylesheet" href="assets/css/materialize.custom.css" />
+  </head>
+  <body>
+    <header class="navbar-fixed">
+      <nav class="white" role="navigation" aria-label="Principal">
+        <div class="nav-wrapper container">
+          <a href="index.html" class="brand-logo left">
+            <img src="assets/img/logo-fithabit.png" alt="FitHabit" class="nav-logo responsive-img" width="120" height="32" loading="eager">
+          </a>
+          <span class="mobile-page-title hide-on-med-and-up">Dashboard</span>
+          <ul class="right hide-on-med-and-down">
+            <li><a class="nav-link-active" href="index.html">Dashboard</a></li>
+            <li><a href="habitos.html">Hábitos</a></li>
+            <li><a href="relatorios.html">Relatórios</a></li>
+            
+            <li><a href="perfil.html"><img alt="avatar" src="https://i.pravatar.cc/32?img=5" style="border-radius:50%" width="32" height="32" loading="lazy" /></a></li>
+          </ul>
+        </div>
+      </nav>
+      
+    </header>
+
+    <main class="container" style="padding-top: 2rem;">
+      <div class="section" aria-live="polite"></div>
+      <h1 style="margin-top:1rem;">Progresso do Dia</h1>
+      <p class="flow-text" style="margin:.25rem 0 1rem;">Acompanhe seu progresso diário e mantenha o foco nos seus objetivos com um visual limpo e responsivo.</p>
+      <section style="margin-bottom:1rem;">
+        <div class="row" style="align-items:center;">
+          <div class="col s12">
+            <div class="text-sub" style="margin-bottom:.25rem;">Hábitos Concluídos</div>
+          </div>
+          <div class="col s12">
+            <div class="progress-wrap" style="display:flex; align-items:center; gap:12px;">
+              <div class="progress" style="flex:1; margin:.25rem 0;" aria-label="Progresso diário">
+                <div class="determinate" style="width:75%" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75"></div>
+              </div>
+              <span class="text-sub" style="white-space:nowrap;">75%</span>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:.25rem;">
+          <div class="col s12">
+            <div class="chip">
+              <i class="material-icons-round">local_fire_department</i>
+              Sequência (75%): 5 Dias
+            </div>
+          </div>
+          <div class="col s12" style="margin-top:.25rem;">
+            <a href="habitos.html" class="waves-effect waves-light btn-large"><i class="material-icons left">add</i>Criar Novo Hábito</a>
+          </div>
+        </div>
+      </section>
+      <div class="card hoverable">
+        <div class="card-content">
+          <p class="eyebrow">Progresso na perda de peso</p>
+          <div class="use-tnum" style="font-size:2rem; font-weight:700; margin:0 0 .25rem 0;">-3,4kg</div>
+          <div class="text-sub" style="margin-bottom:.5rem;"><span class="use-tnum text-error">Últimos 30 Dias -1,2%</span></div>
+          <div style="height:220px; border:1px solid #E5E7EB; border-radius:12px; background:#fff"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation (mobile only) -->
+    <nav class="mobile-bottom-nav hide-on-med-and-up">
+      <div class="container mb-wrap">
+        <a href="index.html" class="active"><i class="material-icons">home</i><span>Dashboard</span></a>
+        <a href="habitos.html"><i class="material-icons">list</i><span>Hábitos</span></a>
+        <a href="relatorios.html"><i class="material-icons">calendar_today</i><span>Relatórios</span></a>
+        <a href="perfil.html"><i class="material-icons">person</i><span>Perfil</span></a>
+      </div>
+    </nav>
+    
+  </body>
+</html>

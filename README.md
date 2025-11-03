@@ -13,7 +13,7 @@ Ajudar o usuário a ganhar consistência em hábitos que impactam o emagreciment
 Pessoas que querem emagrecer com hábitos diários (iniciante a intermediário), sem dietas extremas.
 
 ## Design das Telas - Figma: 
-### Em andamento
+### Prévia Finalizada
 
 https://www.figma.com/design/nU9CPcXy2UOZo5k63KLd14/Gestor-de-H%C3%A1bitos---FitTrack?node-id=0-1&t=Y0BHTYdTWUM31EGW-1
 
@@ -26,7 +26,7 @@ https://drive.google.com/file/d/1t0peynlAZ2YXLiLuXodLt71Fj9BkaQyb/view?usp=shari
 Materialize
 
 ## Dependências JavaScript
-
+---
 ## Checklist | Indicadores de Desempenho (ID) dos Resultados de Aprendizagem (RA)
 
 #### RA1 - Utilizar Frameworks CSS para estilização de elementos HTML e criação de layouts responsivos.

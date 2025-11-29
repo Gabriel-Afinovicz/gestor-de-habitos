@@ -21,40 +21,343 @@ nav.white, nav{background-color:var(--fh-surface)!important; box-shadow:none}
 /* Logo imagem na navbar */
 /* Logo no navbar — alinha e evita corte */
 nav .brand-logo{display:flex;align-items:center;height:64px}
-nav .brand-logo .nav-logo{height:40px;width:auto;display:block}
-@media (max-width: 992px){
-  nav .brand-logo{left:0;transform:none}
-  nav .brand-logo .nav-logo{height:34px}
+.navbar-logo-img{
+  height:44px;   /* tamanho padrão em desktop, mais proporcional ao título */
+  width:auto;
+  display:block;
 }
-/* Mobile-specific tuning */
 @media (max-width: 600px){
-  nav .brand-logo .nav-logo{height:44px}
-  .mobile-page-title{display:inline-block;position:absolute;right:0;top:0;height:64px;line-height:64px;font-weight:700;color:#0A2419}
+  .navbar-logo-img{
+    height:32px; /* levemente menor em telas bem estreitas, ainda bem visível */
+  }
+  .mobile-page-title{
+    display:inline-block;
+    position:absolute;
+    right:0;
+    top:0;
+    height:64px;
+    line-height:64px;
+    font-weight:700;
+    color:#0A2419;
+  }
 }
-/* Avatar na navbar alinhado ao centro da linha */
-nav .nav-wrapper ul.right li a{display:flex;align-items:center;height:64px;padding-top:0;padding-bottom:0}
+/* Avatar e links na navbar alinhados ao centro da linha */
+nav .nav-wrapper ul.right li a{
+  display:flex;
+  align-items:center;
+  height:64px;
+  padding-top:0;
+  padding-bottom:0;
+  position:relative;
+}
 nav .nav-wrapper ul.right li a img{display:block;height:36px;width:36px;border-radius:50%}
+
+/* Switch de tema na navbar */
+.navbar-theme-toggle{
+  display:flex;
+  align-items:center;
+  height:64px;
+}
+
+.theme-toggle-wrapper{
+  display:flex;
+  align-items:center;     /* centraliza verticalmente dentro da navbar */
+  justify-content:center; /* centraliza horizontalmente no espaço dele */
+  height:100%;
+  margin:0 8px;           /* pequeno respiro lateral */
+  padding:0;
+}
+
+.switch{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.checkbox{
+  display:none;
+}
+.slider{
+  width:40px;
+  height:20px;
+  background-color:lightgray;
+  border-radius:20px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  border:3px solid transparent;
+  transition:0.3s;
+  box-shadow:0 0 6px 0 rgba(0,0,0,0.25) inset;
+  cursor:pointer;
+}
+/* “bolinha” interna */
+.slider::before{
+  content:"";
+  display:block;
+  width:100%;
+  height:100%;
+  background-color:#fff;
+  transform:translateX(-20px); /* metade da largura */
+  border-radius:20px;
+  transition:0.3s;
+  box-shadow:0 0 6px 2px rgba(0,0,0,0.25);
+}
+/* Estado marcado = tema escuro */
+.checkbox:checked ~ .slider::before{
+  transform:translateX(20px);
+  box-shadow:0 0 6px 2px rgba(0,0,0,0.25);
+}
+/* Usa o verde padrão do FitHabit em vez de azul */
+.checkbox:checked ~ .slider{
+  background-color:var(--accent, #2DDC9A);
+}
+/* Clique rápido na bolinha */
+.checkbox:active ~ .slider::before{
+  transform:translate(0);
+}
+
+/* Avatares (navbar + perfil) */
+[data-profile-avatar]{
+  border-radius:50%;
+  background:#E5E7EB;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background-size:cover;
+  background-position:center;
+}
+.navbar-avatar{
+  width:36px;
+  height:36px;
+}
+.profile-avatar-lg{
+  width:120px;
+  height:120px;
+  margin:0 auto 0.75rem auto;
+}
+.profile-avatar-icon{
+  color:#64748B;
+  font-size:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
 /* Hierarquia tipográfica (levemente menor) */
 h1{font-size:1.75rem; font-weight:700; letter-spacing:-0.01em}
 h2{font-size:1.25rem; font-weight:600}
 .card-title{font-size:1.25rem}
-.nav-link-active{position:relative}
-.nav-link-active:after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:3px;background:var(--fh-primary);border-radius:2px}
+
+/* Container padrão das páginas (distância da navbar + conteúdo) */
+.page-content{
+  padding-top:32px;   /* mesmo espaçamento vertical do index (Dashboard) */
+  padding-left:40px;
+  padding-right:40px;
+}
+/* Primeiro header principal da página (com barrinha verde) */
+.page-content > .section-header:first-of-type{
+  margin-top:0;
+  margin-bottom:16px; /* leve respiro global entre título+subtítulo e o conteúdo abaixo */
+}
+
+/* Título de seção com barra/pill verde contínua à esquerda (dashboard + cards) */
+.section-header{
+  display:flex;
+  align-items:stretch;
+  gap:0.75rem;
+}
+.section-header-accent{
+  width:6px;
+  border-radius:999px;
+  background:linear-gradient(180deg,#2DDC9A,#9FFFE0);
+  box-shadow:0 0 0 4px rgba(45,220,154,0.15);
+  flex-shrink:0;
+  align-self:stretch; /* faz a barra acompanhar toda a altura do bloco de texto */
+}
+.section-header-content{
+  display:flex;
+  flex-direction:column;
+  gap:.15rem;
+}
+.section-header-content h1,
+.section-header-content h2,
+.section-header-content p{
+  margin-top:0;
+  margin-bottom:4px;
+}
+.section-header-title{
+  font-size:1.75rem;
+  font-weight:700;
+  letter-spacing:-0.01em;
+  margin:0;
+}
+.section-header-subtitle{
+  font-size:2rem;
+  font-weight:700;
+  margin:0;
+}
+
+/* Variante de header dentro de modal (menos margem inferior) */
+.section-header--modal{
+  margin-bottom:16px;
+}
+
+/* Layout compacto e arredondado do modal de edição de perfil */
+#editProfileModal.modal{
+  max-width:640px;
+  width:90%;
+  border-radius:16px;
+  overflow:hidden;
+  padding-bottom:12px; /* cria respiro interno geral na parte de baixo */
+}
+#editProfileModal .modal-content{
+  padding:24px 32px;
+}
+/* Footer do modal de perfil: espaçamento claro e botões alinhados à direita */
+#editProfileModal .modal-footer{
+  height:auto;                 /* nada de altura fixa */
+  border-top:none;
+  background:transparent;
+
+  padding:16px 32px 32px;      /* top | laterais | bottom (maior pra afastar da borda) */
+  margin:0;                    /* sem margin colando na borda */
+
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:16px;                    /* espaço entre CANCELAR e SALVAR */
+}
+
+@media (max-width: 600px){
+  #editProfileModal.modal{
+    max-width:95%;
+    width:95%;
+  }
+  #editProfileModal .modal-content{
+    padding:20px;
+  }
+  #editProfileModal .modal-footer{
+    padding:12px 20px 24px; /* mantém bottom maior mesmo no mobile */
+  }
+}
+/* Cabeçalho da seção de progresso de hábitos no dashboard */
+.habits-header-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:4rem;     /* respiro em relação ao bloco "Progresso do Dia" */
+  margin-bottom:.25rem;
+}
+
+/* Sub-linha animada na navbar (efeito de transição suave) */
+nav .nav-wrapper ul.right li a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-10px;
+  height:3px;
+  background:var(--fh-primary);
+  border-radius:2px;
+  transform:scaleX(0);
+  transform-origin:left center;
+  transition:transform .25s ease;
+}
+nav .nav-wrapper ul.right li a:hover::after,
+nav .nav-wrapper ul.right li a.nav-link-active::after{
+  transform:scaleX(1);
+}
 
 /* Botões, chips e progresso */
-.btn,.btn-large,.btn-small{border-radius:.75rem}
-.btn,.btn-large{background-color:var(--fh-primary)}
-.btn:hover{filter:brightness(.95)}
+.btn,
+.btn-large,
+.btn-small{
+  border-radius:.75rem;
+}
+.btn,
+.btn-large{
+  background-color:var(--fh-primary);
+  /* transição suave para hover/click */
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    filter .18s ease;
+  box-shadow:0 10px 22px rgba(45,220,154,.25);
+}
+.btn:hover,
+.btn-large:hover{
+  filter:brightness(.96);
+  transform:translateY(-1px);
+  box-shadow:0 16px 30px rgba(45,220,154,.35);
+}
+.btn:active,
+.btn-large:active{
+  transform:translateY(0);
+  box-shadow:0 6px 16px rgba(45,220,154,.2);
+  filter:brightness(.93);
+}
+
+/* Botão primário reutilizável (Dashboard + Formulário de Hábito)
+   - Padroniza tipografia
+   - Aplica animação de gradiente suave no fundo */
+.btn-primary{
+  font-family:'Inter','Manrope',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-weight:600;
+  font-size:.95rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+
+  /* Gradiente suave em tons de verde FitHabit
+     (animação lenta para não distrair o usuário) */
+  background-image:linear-gradient(120deg,#22C781,#2DDC9A,#22C781);
+  background-size:200% 200%;
+  background-position:0% 50%;
+  animation:fh-btn-gradient 6s ease-in-out infinite;
+}
+@keyframes fh-btn-gradient{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
 .chip{background-color:rgba(45,220,154,.12);color:var(--fh-secondary);display:inline-flex;align-items:center;gap:.5rem;line-height:1;padding:.4rem .75rem}
 .chip .material-icons,.chip .material-icons-round{color:var(--fh-primary)}
 .progress{background:var(--fh-border);height:8px}
-.progress .determinate{background-color:var(--fh-primary)}
+/* Barra preenchida com gradiente animado suave, sem alterar a largura */
+.progress .determinate{
+  background-image:linear-gradient(90deg,#22C781,#2DDC9A,#16A36A);
+  background-size:200% 100%;
+  background-position:0 0;
+  animation:fh-progress-gradient 6s ease-in-out infinite;
+}
+@keyframes fh-progress-gradient{
+  0%{background-position:0 0;}
+  50%{background-position:100% 0;}
+  100%{background-position:0 0;}
+}
 
 /* Cards */
 .card{border-radius:12px;border:1px solid var(--fh-border);box-shadow:none}
 .card.hoverable:hover{box-shadow:0 8px 24px rgba(10,36,25,.06)}
 .eyebrow{font-size:.875rem;color:var(--fh-subtitle);margin:0 0 .5rem 0}
+
+/* Container do gráfico de progresso de hábitos no dashboard */
+.habits-chart-container{
+  height:300px;
+  min-height:260px;
+}
+@media (max-width: 992px){
+  .habits-chart-container{
+    height:260px;
+  }
+}
+@media (max-width: 600px){
+  .habits-chart-container{
+    height:220px;
+  }
+}
 
 /* Inputs */
 input[type=text],input[type=time],select{border-radius:.5rem}
@@ -86,4 +389,119 @@ table.highlight>tbody>tr:hover{background:rgba(45,220,154,.08)}
 .mobile-bottom-nav a.active{color:#0A2419}
 @media (max-width:600px){ body{padding-bottom:88px} }
 
+/* ------------------------------------------------------------------
+   Sistema de temas (claro/escuro) baseado em variáveis CSS
+   ------------------------------------------------------------------ */
+
+/* Tema claro (padrão) */
+:root{
+  --fh-theme-bg-main:#F8FAFC;
+  --fh-theme-bg-card:#FFFFFF;
+  --fh-theme-bg-nav:#F8FAFC;
+  --fh-theme-bg-mobile-nav:#FFFFFF;
+
+  --fh-theme-text-primary:#0A2419;
+  --fh-theme-text-secondary:#334155;
+  --fh-theme-text-muted:#64748B;
+
+  --fh-theme-border:#E5E7EB;
+  --fh-theme-table-row-alt:#F8FAFC;
+  --fh-theme-table-row-hover:rgba(45,220,154,.08);
+
+  --fh-theme-nav-link:#0A2419;
+  --fh-theme-nav-link-active:#0A2419;
+}
+
+/* Tema escuro */
+:root[data-theme="dark"]{
+  --fh-theme-bg-main:#020617;
+  --fh-theme-bg-card:#020617;
+  --fh-theme-bg-nav:#020617;
+  --fh-theme-bg-mobile-nav:#020617;
+
+  --fh-theme-text-primary:#F9FAFB;
+  --fh-theme-text-secondary:#E2E8F0;
+  --fh-theme-text-muted:#94A3B8;
+
+  --fh-theme-border:#1F2937;
+  --fh-theme-table-row-alt:#020617;
+  --fh-theme-table-row-hover:rgba(45,220,154,.14);
+
+  --fh-theme-nav-link:#E2E8F0;
+  --fh-theme-nav-link-active:#FFFFFF;
+}
+
+/* Aplica variáveis de tema nos elementos principais */
+body{
+  background-color:var(--fh-theme-bg-main);
+  color:var(--fh-theme-text-primary);
+  transition:background-color .25s ease,color .25s ease;
+}
+
+nav.white, nav{
+  background-color:var(--fh-theme-bg-nav)!important;
+}
+.nav-wrapper a{
+  color:var(--fh-theme-nav-link)!important;
+}
+.mobile-page-title{
+  color:var(--fh-theme-nav-link);
+}
+
+.card{
+  background-color:var(--fh-theme-bg-card);
+  border-color:var(--fh-theme-border);
+}
+.eyebrow,
+.text-sub{
+  color:var(--fh-theme-text-secondary)!important;
+}
+
+table.striped>tbody>tr:nth-child(odd){
+  background:var(--fh-theme-table-row-alt);
+}
+table.highlight>tbody>tr:hover{
+  background:var(--fh-theme-table-row-hover);
+}
+
+.mobile-bottom-nav{
+  background:var(--fh-theme-bg-mobile-nav);
+  border-top:1px solid var(--fh-theme-border);
+}
+.mobile-bottom-nav a{
+  color:var(--fh-theme-nav-link);
+}
+.mobile-bottom-nav a .material-icons,
+.mobile-bottom-nav a .material-icons-round{
+  color:var(--fh-theme-nav-link);
+}
+.mobile-bottom-nav a.active{
+  color:var(--fh-theme-nav-link-active);
+}
+
+/* Toggle de tema na navbar */
+.theme-toggle{
+  border:none;
+  background:transparent;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  cursor:pointer;
+  padding:0 8px;
+  height:64px;
+  color:var(--fh-theme-nav-link);
+  transition:color .2s ease,transform .15s ease;
+}
+.theme-toggle:hover{
+  transform:translateY(-1px);
+  color:var(--fh-primary);
+}
+.theme-toggle-icon{
+  font-size:18px;
+  line-height:1;
+}
+.theme-toggle-label{
+  font-size:.9rem;
+}
 

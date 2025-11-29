@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FitHabit — Relatórios</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+    <link rel="stylesheet" href="../assets/css/materialize.custom.css" />
+  </head>
+  <body>
+    <header class="navbar-fixed">
+      <nav class="white" role="navigation" aria-label="Principal">
+        <div class="nav-wrapper container">
+          <a href="index.html" class="brand-logo left">
+            <img src="../assets/img/logo-fithabit.png" alt="FitHabit" class="navbar-logo-img" loading="eager">
+          </a>
+          <span class="mobile-page-title hide-on-med-and-up">Relatórios</span>
+          
+          <ul class="right hide-on-med-and-down">
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="habitos.html">Hábitos</a></li>
+            <li><a class="nav-link-active" href="relatorios.html">Relatórios</a></li>
+            <li class="navbar-theme-toggle">
+              <div class="theme-toggle-wrapper">
+                <label class="switch theme-toggle">
+                  <input
+                    type="checkbox"
+                    class="checkbox"
+                    id="themeToggleSwitch"
+                    aria-label="Alternar tema"
+                  />
+                  <div class="slider"></div>
+                </label>
+              </div>
+            </li>
+            <li>
+              <a href="perfil.html" class="navbar-avatar-link">
+                <div class="navbar-avatar" data-profile-avatar>
+                  <i class="material-icons-round profile-avatar-icon">account_circle</i>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      
+    </header>
+
+    <main class="page-content container">
+      <div class="section-header">
+        <div class="section-header-accent" aria-hidden="true"></div>
+        <div class="section-header-content">
+          <h1 class="section-header-title">Relatórios</h1>
+          <p class="text-sub" style="margin:0;">
+            Acompanhe seu progresso ao longo do tempo.
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content">
+              <div class="row" style="align-items:center; margin-bottom:.5rem;">
+                <div class="col s12"><strong>Calendário</strong></div>
+              </div>
+              <style>
+                /* Estilos básicos do calendário de relatórios */
+                #reports-calendar{
+                  padding:0;
+                  border:none;
+                  background:transparent;
+                }
+
+                /* Wrapper com dois mini-calendários lado a lado (layouts de mês) */
+                #reports-calendar .reports-cal-wrapper{
+                  display:flex;
+                  gap:1rem;
+                  align-items:stretch; /* faz os dois cards terem a mesma altura */
+                  justify-content:space-between;
+                  flex-wrap:wrap;
+                }
+
+                /* Cada mês funciona como um "mini-card" compacto de calendário */
+                #reports-calendar .calendar-month{
+                  flex:1 1 0;
+                  min-width:220px;
+                  border-radius:12px;
+                  border:1px solid #E5E7EB;
+                  box-shadow:0 8px 20px rgba(15,23,42,0.06);
+                  background:#fff;
+                  padding:12px 12px 10px;
+                  display:flex;
+                  flex-direction:column;
+                }
+
+                /* Título do mês/ano centralizado */
+                #reports-calendar .cal-month{
+                  font-weight:700;
+                  text-align:center;
+                  margin-bottom:.5rem;
+                  text-transform:capitalize;
+                }
+
+                /* Grade dos dias em CSS Grid, agora sem linhas de grade visíveis */
+                #reports-calendar .cal-grid{
+                  display:grid;
+                  grid-template-columns:repeat(7,1fr);
+                  gap:.35rem;
+                  font-size:.8rem;
+                }
+
+                /* Cabeçalho D S T Q Q S S (sem linhas, apenas texto leve) */
+                #reports-calendar .cal-head{
+                  font-weight:600;
+                  color:#334155;
+                  padding:.1rem 0 .25rem;
+                  text-align:center;
+                  background:transparent;
+                }
+
+                /* Células de dia: círculos ("pills") individuais, compactos */
+                #reports-calendar .cal-cell{
+                  padding:0;
+                  text-align:center;
+                  background:#F5F5F5;
+                  color:#0a2419;
+                  cursor:pointer;
+                  font-size:.8rem;
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  aspect-ratio:1/1;
+                  border-radius:50%;
+                  border:none;
+                  transition:
+                    background-color .15s ease,
+                    color .15s ease,
+                    transform .12s ease,
+                    box-shadow .15s ease;
+                }
+
+                #reports-calendar .cal-cell:hover{
+                  transform:translateY(-1px);
+                  box-shadow:0 4px 10px rgba(15,23,42,0.08);
+                }
+
+                /* Células vazias (antes/depois do mês), só seguram o espaço da grade */
+                #reports-calendar .cal-empty{
+                  aspect-ratio:1/1;
+                }
+
+                /* Dias futuros (após hoje): visual apagado e não clicáveis */
+                #reports-calendar .cal-future{
+                  background:#F9FAFB;
+                  color:#CBD5E1;
+                  cursor:default;
+                  pointer-events:none;
+                  box-shadow:none;
+                }
+
+                /* Destaque das extremidades do intervalo selecionado */
+                #reports-calendar .cal-range-start,
+                #reports-calendar .cal-range-end{
+                  background:#DCFCE7;
+                  color:#065F46;
+                  font-weight:600;
+                  box-shadow:0 0 0 2px rgba(34,197,94,0.6);
+                }
+
+                /* Fundo suave para os dias entre dataInicial e dataFinal */
+                #reports-calendar .cal-range-between{
+                  background:rgba(34,197,94,0.12);
+                  color:#0a2419;
+                }
+
+                /* Empilha os dois calendários em telas menores */
+                @media (max-width: 600px){
+                  #reports-calendar .reports-cal-wrapper{
+                    flex-direction:column;
+                  }
+                }
+              </style>
+              <div class="row">
+                <div class="col s12">
+                  <div id="reports-calendar" class="cal-wrap">
+                    <!-- Calendário será gerado dinamicamente via JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12">
+          <div class="card hoverable">
+            <div class="card-content">
+              <div class="row" style="margin-bottom:.5rem;">
+                <div class="col s12">
+                  <p class="text-sub" data-reports-range>
+                    Exibindo os últimos 30 dias
+                  </p>
+                </div>
+              </div>
+              <div style="height:260px; border:1px solid var(--fh-theme-border, #E5E7EB); border-radius:12px; background:var(--fh-theme-bg-card, #fff); padding:12px;">
+                <canvas id="reportsChart" aria-label="Gráfico de progresso de hábitos por período" role="img"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" aria-live="polite"></div>
+    </main>
+
+    <!-- Bottom Navigation (mobile only) -->
+    <nav class="mobile-bottom-nav hide-on-med-and-up">
+      <div class="container mb-wrap">
+        <a href="index.html"><i class="material-icons">home</i><span>Dashboard</span></a>
+        <a href="habitos.html"><i class="material-icons">list</i><span>Hábitos</span></a>
+        <a href="relatorios.html" class="active"><i class="material-icons">calendar_today</i><span>Relatórios</span></a>
+        <a href="perfil.html"><i class="material-icons">person</i><span>Perfil</span></a>
+      </div>
+    </nav>
+
+
+    <!-- Scripts de tema, perfil, dados de hábitos e relatórios -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/profile.js"></script>
+    <script src="../assets/js/fithabit.js"></script>
+    <script src="../assets/js/reports.js"></script>
+  </body>
+</html>
+
+
+

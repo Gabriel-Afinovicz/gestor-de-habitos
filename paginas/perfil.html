@@ -7,14 +7,14 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
-    <link rel="stylesheet" href="assets/css/materialize.custom.css" />
+    <link rel="stylesheet" href="../assets/css/materialize.custom.css" />
   </head>
   <body>
     <header class="navbar-fixed">
       <nav class="white" role="navigation" aria-label="Principal">
         <div class="nav-wrapper container">
           <a href="index.html" class="brand-logo left">
-            <img src="assets/img/logo-fithabit.png" alt="FitHabit" class="nav-logo responsive-img" width="120" height="32" loading="eager">
+            <img src="../assets/img/logo-fithabit.png" alt="FitHabit" class="navbar-logo-img" loading="eager">
           </a>
           <span class="mobile-page-title hide-on-med-and-up">Perfil</span>
           
@@ -22,25 +22,82 @@
             <li><a href="index.html">Dashboard</a></li>
             <li><a href="habitos.html">Hábitos</a></li>
             <li><a href="relatorios.html">Relatórios</a></li>
-            
-            <li><a class="nav-link-active" href="perfil.html"><img alt="avatar" src="https://i.pravatar.cc/32?img=5" style="border-radius:50%" width="32" height="32" loading="lazy" /></a></li>
+            <li class="navbar-theme-toggle">
+              <div class="theme-toggle-wrapper">
+                <label class="switch theme-toggle">
+                  <input
+                    type="checkbox"
+                    class="checkbox"
+                    id="themeToggleSwitch"
+                    aria-label="Alternar tema"
+                  />
+                  <div class="slider"></div>
+                </label>
+              </div>
+            </li>
+            <li>
+              <a class="nav-link-active" href="perfil.html">
+                <div class="navbar-avatar" data-profile-avatar>
+                  <i class="material-icons-round profile-avatar-icon">account_circle</i>
+                </div>
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
       
     </header>
 
-    <main class="container" style="padding-top:2rem;">
+    <main class="page-content container">
       <section class="center-align" style="margin-bottom:2rem;">
-        <img src="https://i.pravatar.cc/160?img=5" alt="Avatar" style="border-radius:50%; width:120px; height:120px;" />
-        <h1 style="margin:.75rem 0 0 0;">Sofia Oliveira</h1>
-        <p class="text-sub" style="margin:.25rem 0; color:#16a34a;">Entusiasta de fitness e bem-estar</p>
+        <div class="profile-avatar-lg" data-profile-avatar>
+          <i class="material-icons-round profile-avatar-icon">account_circle</i>
+        </div>
+        <h1 style="margin:.75rem 0 0 0;" data-profile-name>Sofia Oliveira</h1>
+        <p class="text-sub" style="margin:.25rem 0; color:#16a34a;" data-profile-bio>Entusiasta de fitness e bem-estar</p>
         <div class="card" style="display:inline-block; border-radius:12px; background:#EDF2F7; box-shadow:none;">
           <div class="card-content" style="padding:.75rem 1.5rem;">
-            <strong>Editar Perfil</strong>
+            <a href="#editProfileModal" class="btn btn-primary modal-trigger">
+              <i class="material-icons-round left">edit</i>Editar Perfil
+            </a>
           </div>
         </div>
       </section>
+
+      <!-- Modal de edição de perfil -->
+      <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+          <div class="section-header section-header--modal">
+            <div class="section-header-accent" aria-hidden="true"></div>
+            <div class="section-header-content">
+              <h5 style="margin:0;">Editar perfil</h5>
+            </div>
+          </div>
+          <form id="editProfileForm">
+            <div class="input-field">
+              <input id="profileName" type="text" required>
+              <label for="profileName">Nome completo</label>
+            </div>
+            <div class="input-field">
+              <input id="profileBio" type="text" required>
+              <label for="profileBio">Descrição de perfil</label>
+            </div>
+            <div class="file-field input-field">
+              <div class="btn btn-primary">
+                <span>Selecionar foto</span>
+                <input id="profilePhotoInput" type="file" accept="image/*">
+              </div>
+              <div class="file-path-wrapper">
+                <input class="file-path validate" type="text" placeholder="Escolha uma nova foto de perfil (opcional)">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close btn-flat">Cancelar</a>
+          <button type="submit" form="editProfileForm" class="btn btn-primary">Salvar alterações</button>
+        </div>
+      </div>
 
       <section style="margin-bottom:1.5rem;">
         <h5>Estatísticas</h5>
@@ -112,6 +169,11 @@
       </div>
     </nav>
     
+
+    <!-- Materialize JS, tema, perfil e demais scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/profile.js"></script>
   </body>
 </html>
 

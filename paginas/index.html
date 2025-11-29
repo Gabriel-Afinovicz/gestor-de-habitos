@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FitHabit — Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+    <link rel="stylesheet" href="../assets/css/materialize.custom.css" />
+  </head>
+  <body>
+    <header class="navbar-fixed">
+      <nav class="white" role="navigation" aria-label="Principal">
+        <div class="nav-wrapper container">
+          <a href="index.html" class="brand-logo left">
+            <img src="../assets/img/logo-fithabit.png" alt="FitHabit" class="navbar-logo-img" loading="eager">
+          </a>
+          <span class="mobile-page-title hide-on-med-and-up">Dashboard</span>
+          <ul class="right hide-on-med-and-down">
+            <li><a class="nav-link-active" href="index.html">Dashboard</a></li>
+            <li><a href="habitos.html">Hábitos</a></li>
+            <li><a href="relatorios.html">Relatórios</a></li>
+            <li class="navbar-theme-toggle">
+              <div class="theme-toggle-wrapper">
+                <label class="switch theme-toggle">
+                  <input
+                    type="checkbox"
+                    class="checkbox"
+                    id="themeToggleSwitch"
+                    aria-label="Alternar tema"
+                  />
+                  <div class="slider"></div>
+                </label>
+              </div>
+            </li>
+            <li>
+              <a href="perfil.html" class="navbar-avatar-link">
+                <div class="navbar-avatar" data-profile-avatar>
+                  <i class="material-icons-round profile-avatar-icon">account_circle</i>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      
+    </header>
+
+    <main class="page-content container">
+      <div class="section" aria-live="polite"></div>
+      <div class="section-header">
+        <div class="section-header-accent" aria-hidden="true"></div>
+        <div class="section-header-content">
+          <h1 class="section-header-title">Progresso do Dia</h1>
+          <p class="text-sub" style="margin:0;">
+            Acompanhe seu progresso diário e mantenha o foco nos seus objetivos com um visual limpo e responsivo.
+          </p>
+        </div>
+      </div>
+      <section style="margin-bottom:1rem;">
+        <div class="row" style="align-items:center;">
+          <div class="col s12">
+            <div class="habits-header-row text-sub">
+              <span>Hábitos Concluídos</span>
+              <span class="use-tnum" data-habits-today-summary>
+                | Hoje: nenhum hábito cadastrado ainda
+              </span>
+            </div>
+          </div>
+          <div class="col s12">
+            <div class="progress-wrap" style="display:flex; align-items:center; gap:12px;">
+              <div class="progress" style="flex:1; margin:.25rem 0;" aria-label="Progresso diário">
+                <div class="determinate" style="width:75%" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75"></div>
+              </div>
+              <span class="text-sub" style="white-space:nowrap;">75%</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12" style="margin-top:.5rem;">
+            <a href="habitos.html" class="waves-effect waves-light btn-large btn-primary">
+              <i class="material-icons left">add</i>Criar Novo Hábito
+            </a>
+          </div>
+        </div>
+      </section>
+      <div class="card hoverable">
+        <div class="card-content">
+          <div class="section-header" style="margin-bottom:.75rem;">
+            <div class="section-header-accent" aria-hidden="true"></div>
+            <div class="section-header-content">
+              <p class="eyebrow" style="margin:0 0 .15rem 0;">Progresso dos Hábitos</p>
+              <div
+                class="use-tnum section-header-subtitle"
+                data-habits-average
+              >
+                Média: 0% de hábitos concluídos
+              </div>
+              <div class="text-sub" style="margin-top:.15rem;">
+                <span class="use-tnum text-error" data-habits-streak>
+                  Sequência atual: 0 dias seguidos cumprindo hábitos
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="habits-chart-container" style="border:1px solid #E5E7EB; border-radius:12px; background:#fff; padding:12px;">
+            <canvas id="habitsProgressChart" aria-label="Gráfico de progresso dos hábitos nos últimos 7 dias" role="img"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation (mobile only) -->
+    <nav class="mobile-bottom-nav hide-on-med-and-up">
+      <div class="container mb-wrap">
+        <a href="index.html" class="active"><i class="material-icons">home</i><span>Dashboard</span></a>
+        <a href="habitos.html"><i class="material-icons">list</i><span>Hábitos</span></a>
+        <a href="relatorios.html"><i class="material-icons">calendar_today</i><span>Relatórios</span></a>
+        <a href="perfil.html"><i class="material-icons">person</i><span>Perfil</span></a>
+      </div>
+    </nav>
+
+    <!-- Chart.js via CDN e scripts principais do FitHabit -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/profile.js"></script>
+    <script src="../assets/js/fithabit.js"></script>
+  </body>
+</html>

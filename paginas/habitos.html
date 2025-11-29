@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FitHabit — Hábitos</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+    <!-- Seu tema compilado (Materialize + Sass) -->
+    <link rel="stylesheet" href="../assets/css/materialize.custom.css" />
+
+    <!-- Ajustes visuais para aproximar do Figma -->
+    <style>
+      /* fundo clarinho (usa variável de tema) */
+      body { background: var(--fh-theme-bg-main, #f7fafc); }
+
+      /* títulos e espaçamentos */
+      main.container { padding-top: 2rem; }
+      h1 { margin: 2rem 0 1rem; }
+
+      /* cards “macios” */
+      .card-rounded { border-radius: 14px; overflow: hidden; }
+      .card-elev { box-shadow: 0 8px 24px rgba(2, 8, 20, 0.06); }
+
+      /* cartões específicos */
+      .form-card .card-content { padding: 1.5rem; }
+      .table-card .card-content { padding: 0; }
+      .table-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid #eef2f6; }
+      .table-wrap { padding: .5rem 1rem 1rem; }
+
+      /* tabela limpa */
+      .table-clean th { color:#0a2419; font-weight:700; }
+      .table-clean th, .table-clean td { padding: 1rem 1.25rem; }
+      .table-clean tr { border-bottom: 1px solid #eef2f6; }
+      .table-clean tr:last-child { border-bottom: 0; }
+
+      /* Layout da tabela de hábitos: evita estouro horizontal e mantém Ação visível */
+      #habits-table {
+        table-layout: fixed;
+        width: 100%;
+      }
+
+      /* Células de texto que podem quebrar em múltiplas linhas */
+      .table-cell-wrap {
+        white-space: normal;
+        overflow-wrap: break-word; /* Navegadores modernos */
+        word-wrap: break-word;     /* Suporte legado */
+        word-break: break-word;    /* Palavras muito longas/sem espaço */
+      }
+
+      /* Larguras relativas das colunas em telas médias/maiores */
+      @media (min-width: 768px) {
+        #habits-table th:nth-child(1),
+        #habits-table td:nth-child(1) { width: 28%; }
+
+        #habits-table th:nth-child(2),
+        #habits-table td:nth-child(2) { width: 20%; }
+
+        #habits-table th:nth-child(3),
+        #habits-table td:nth-child(3) { width: 26%; }
+
+        #habits-table th:nth-child(4),
+        #habits-table td:nth-child(4) { width: 14%; }
+
+        #habits-table th:nth-child(5),
+        #habits-table td:nth-child(5) { width: 12%; }
+      }
+
+      /* Coluna de ação sempre visível e compacta à direita */
+      .fh-actions-col {
+        min-width: 120px;
+        white-space: nowrap;
+      }
+
+      /* Status e ações da tabela de hábitos */
+      .fh-status-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        background-color: #f8fafc;
+        color: #cbd5e1;
+        transition:
+          background-color 150ms ease,
+          color 150ms ease,
+          border-color 150ms ease,
+          transform 120ms ease;
+      }
+
+      .fh-status-chip:hover {
+        transform: translateY(-1px);
+        background-color: #edf2f7;
+      }
+
+      .fh-status-chip.fh-status-done {
+        color: var(--fh-primary, #2DDC9A);
+        background-color: rgba(45, 220, 154, 0.08);
+        border-color: rgba(45, 220, 154, 0.35);
+      }
+
+      .fh-status-chip.fh-status-pending {
+        color: #cbd5e1;
+        background-color: #f8fafc;
+        border-color: transparent;
+      }
+
+      .fh-table-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .fh-table-link {
+        border: none;
+        background: none;
+        padding: 0;
+        font-size: 0.85rem;
+        color: var(--fh-subtitle, #64748b);
+        cursor: pointer;
+        transition:
+          color 150ms ease,
+          transform 120ms ease;
+      }
+
+      .fh-table-link:hover,
+      .fh-table-link:focus {
+        color: #0a2419;
+        transform: translateY(-1px);
+      }
+
+      .fh-table-link-danger {
+        color: #ef4444;
+      }
+
+      .fh-table-link-danger:hover,
+      .fh-table-link-danger:focus {
+        color: #b91c1c;
+      }
+
+      /* chip verdinho para “Diariamente” */
+      .chip.linkish { background:#ecfdf5; color:#08916f; font-weight:600; }
+
+      /* links de ação */
+      .action-link { color:#0a2419; opacity:.75; }
+      .action-link:hover { opacity:1; text-decoration: underline; }
+
+      /* ícone do date alinhado ao input */
+      .input-field .prefix { top: 0.25rem; }
+
+      /* --- Formulário "Criar Novo Hábito" --- */
+
+      /* Card com animação suave de entrada e sombra moderna */
+      .fh-habit-form-card {
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+        animation: fh-card-in 320ms ease-out;
+        transform-origin: top left;
+      }
+
+      @keyframes fh-card-in {
+        from {
+          opacity: 0;
+          transform: translateY(8px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* Cabeçalho do card: título + subtítulo + detalhe visual */
+      .fh-habit-form-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      /* Barrinha vertical usando o verde principal do tema */
+      .fh-habit-form-accent {
+        width: 6px;
+        height: 36px;
+        border-radius: 999px;
+        background: var(--fh-primary, #2DDC9A);
+        box-shadow: 0 0 0 4px rgba(45, 220, 154, 0.15);
+        flex-shrink: 0;
+      }
+
+      .fh-habit-form-title {
+        font-size: 1.45rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 0;
+        color: #0a2419;
+      }
+
+      .fh-habit-form-subtitle {
+        margin: 0.25rem 0 0;
+        font-size: 0.9rem;
+        color: var(--fh-subtitle, #64748b);
+      }
+
+      /* Versão usada em cabeçalhos de seção (ex.: "Hábitos Cadastrados") */
+      .table-head .fh-habit-form-header {
+        margin-bottom: 0;
+        align-items: center;
+      }
+
+      /* Grupo de input com floating label customizado */
+      .fh-input-field {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+
+      .fh-input {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 0.9rem 0 0.5rem;
+        font-size: 1rem;
+        color: #0a2419;
+        background: transparent;
+        transition:
+          border-color 160ms ease,
+          box-shadow 160ms ease,
+          transform 120ms ease;
+      }
+
+      /* Placeholder de exemplo: texto mais apagado que só aparece em foco */
+      .fh-input::placeholder {
+        color: transparent;
+        font-size: 0.9rem;
+        transition: color 150ms ease;
+      }
+
+      .fh-input:focus::placeholder {
+        color: #cbd5e1;
+      }
+
+      .fh-input:hover {
+        border-color: #cbd5e1;
+      }
+
+      .fh-input:focus {
+        outline: none;
+        border-color: var(--fh-primary, #2DDC9A);
+        box-shadow: 0 1px 0 0 var(--fh-primary, #2DDC9A);
+        transform: translateY(-1px);
+      }
+
+      /* Label flutuante: começa na altura da linha e sobe ao focar/preencher */
+      .fh-label {
+        position: absolute;
+        left: 0;
+        top: 0.95rem;
+        font-size: 0.95rem;
+        line-height: 1;
+        color: var(--fh-subtitle, #64748b);
+        pointer-events: none;
+        transition:
+          top 150ms ease,
+          font-size 150ms ease,
+          color 150ms ease;
+      }
+
+      .fh-input:focus + .fh-label,
+      .fh-input:not(:placeholder-shown) + .fh-label {
+        top: -0.35rem;
+        font-size: 0.8rem;
+        color: var(--fh-primary, #2DDC9A);
+      }
+
+      /* Espaçamento do botão em relação aos campos */
+      .fh-form-actions {
+        margin-top: 1.5rem;
+      }
+
+      @media (max-width: 992px){
+        .form-card { margin-bottom: 1.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar-fixed">
+      <nav class="white" role="navigation" aria-label="Principal">
+        <div class="nav-wrapper container">
+          <a href="index.html" class="brand-logo left">
+            <!-- prefira o SVG para nitidez; mantenha o PNG se for o que você tem -->
+            <img src="../assets/img/logo-fithabit.png" alt="FitHabit" class="navbar-logo-img" loading="eager">
+          </a>
+          <span class="mobile-page-title hide-on-med-and-up">Hábitos</span>
+          <ul class="right hide-on-med-and-down">
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a class="nav-link-active" href="habitos.html">Hábitos</a></li>
+            <li><a href="relatorios.html">Relatórios</a></li>
+            <li class="navbar-theme-toggle">
+              <div class="theme-toggle-wrapper">
+                <label class="switch theme-toggle">
+                  <input
+                    type="checkbox"
+                    class="checkbox"
+                    id="themeToggleSwitch"
+                    aria-label="Alternar tema"
+                  />
+                  <div class="slider"></div>
+                </label>
+              </div>
+            </li>
+            <li>
+              <a href="perfil.html" class="navbar-avatar-link">
+                <div class="navbar-avatar" data-profile-avatar>
+                  <i class="material-icons-round profile-avatar-icon">account_circle</i>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      
+    </header>
+
+    <main class="page-content container">
+      <div class="section-header">
+        <div class="section-header-accent" aria-hidden="true"></div>
+        <div class="section-header-content">
+          <h1 class="section-header-title">Cadastrar Hábito</h1>
+          <p class="text-sub" style="margin:0;">
+            Crie e gerencie seus hábitos diários em um só lugar.
+          </p>
+        </div>
+      </div>
+
+      <div class="row" role="region" aria-label="Gestão de hábitos">
+        <!-- Coluna esquerda: FORM em CARD -->
+        <aside class="col s12 m4 l3" aria-label="Criar novo hábito">
+          <div class="card form-card card-rounded card-elev fh-habit-form-card">
+            <div class="card-content">
+              <!-- Cabeçalho do formulário com título reforçado e subtítulo -->
+              <div class="fh-habit-form-header">
+                <div class="fh-habit-form-accent" aria-hidden="true"></div>
+                <div>
+                  <h2 class="fh-habit-form-title">Criar Novo Hábito</h2>
+                  <p class="fh-habit-form-subtitle">Defina um novo compromisso para o seu dia.</p>
+                </div>
+              </div>
+
+              <form id="create-habit-form" aria-label="Criar Hábito">
+                <!-- Nome do Hábito -->
+                <div class="fh-input-field">
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    class="fh-input validate"
+                    required
+                    placeholder="Ex.: Beber 2L de água"
+                    autocomplete="off"
+                  />
+                  <label for="name" class="fh-label">Nome do Hábito</label>
+                  <span class="helper-text" aria-live="polite"></span>
+                </div>
+
+                <!-- Frequência -->
+                <div class="fh-input-field">
+                  <input
+                    id="frequency"
+                    name="frequency"
+                    type="text"
+                    class="fh-input validate"
+                    required
+                    placeholder="Ex.: Todos os dias, 3x por semana"
+                    autocomplete="off"
+                  />
+                  <label for="frequency" class="fh-label">Frequência</label>
+                  <span class="helper-text" aria-live="polite"></span>
+                </div>
+
+                <!-- Objetivo -->
+                <div class="fh-input-field">
+                  <input
+                    id="goal"
+                    name="goal"
+                    type="text"
+                    class="fh-input validate"
+                    required
+                    placeholder="Ex.: Melhorar energia e disposição"
+                    autocomplete="off"
+                  />
+                  <label for="goal" class="fh-label">Objetivo</label>
+                  <span class="helper-text" aria-live="polite"></span>
+                </div>
+
+                <div class="fh-form-actions">
+                  <button class="btn btn-primary waves-effect" type="submit">
+                    <i class="material-icons-round left">save</i>SALVAR
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </aside>
+        
+
+        <!-- Coluna direita: TABELA em CARD -->
+        <section class="col s12 m8 l9" aria-label="Lista de hábitos">
+          <div class="card table-card card-rounded card-elev">
+            <div class="table-head">
+              <div class="fh-habit-form-header">
+                <div class="fh-habit-form-accent" aria-hidden="true"></div>
+                <div>
+                  <h2 class="fh-habit-form-title" style="margin:0;">Hábitos Cadastrados</h2>
+                </div>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="table-wrap">
+                <table id="habits-table" class="highlight responsive-table table-clean">
+                  <thead>
+                    <tr>
+                      <th>Hábito</th>
+                      <th>Frequência</th>
+                      <th>Objetivo</th>
+                      <th>Status</th>
+                      <th class="right-align fh-actions-col" scope="col">Ação</th>
+                    </tr>
+                  </thead>
+                  <tbody id="habits-tbody">
+                    <!-- Linhas serão injetadas dinamicamente via JavaScript (fithabit.js) -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="section" aria-live="polite"></div>
+    </main>
+
+    <!-- Bottom Navigation (mobile only) -->
+    <nav class="mobile-bottom-nav hide-on-med-and-up">
+      <div class="container mb-wrap">
+        <a href="index.html"><i class="material-icons">home</i><span>Dashboard</span></a>
+        <a href="habitos.html" class="active"><i class="material-icons">list</i><span>Hábitos</span></a>
+        <a href="relatorios.html"><i class="material-icons">calendar_today</i><span>Relatórios</span></a>
+        <a href="perfil.html"><i class="material-icons">person</i><span>Perfil</span></a>
+      </div>
+    </nav>
+
+    <!-- Scripts de tema, perfil e principal do FitHabit (hábitos + progresso) -->
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/profile.js"></script>
+    <script src="../assets/js/fithabit.js"></script>
+  </body>
+</html>

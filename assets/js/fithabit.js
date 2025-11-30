@@ -281,6 +281,37 @@
     };
   };
 
+  /**
+   * Constrói um "log diário" agregando quantos hábitos foram concluídos
+   * em cada data (YYYY-MM-DD) com base em completedDates de todos os hábitos.
+   *
+   * Estrutura de retorno:
+   * [
+   *   { date: '2025-11-20', habitosConcluidos: 2 },
+   *   { date: '2025-11-21', habitosConcluidos: 0 },
+   *   ...
+   * ]
+   */
+  const buildDailyCompletionLog = (habits) => {
+    const logMap = new Map();
+
+    habits.forEach((habit) => {
+      (habit.completedDates || []).forEach((isoDate) => {
+        if (!isoDate) return;
+        const current = logMap.get(isoDate) || 0;
+        logMap.set(isoDate, current + 1);
+      });
+    });
+
+    // Converte para array ordenado por data
+    return Array.from(logMap.entries())
+      .sort(([d1], [d2]) => d1.localeCompare(d2))
+      .map(([date, habitosConcluidos]) => ({
+        date,
+        habitosConcluidos,
+      }));
+  };
+
   // ---------- Gráfico + barra de progresso ----------
 
   let habitsProgressChart = null;
@@ -306,9 +337,42 @@
   };
 
   /**
+   * Anima suavemente a mudança de um número inteiro em um elemento,
+   * fazendo uma pequena "contagem" entre o valor atual e o novo.
+   */
+  const animateStatNumber = (element, nextValue) => {
+    if (!element) return;
+
+    const target = Math.max(0, Number.isFinite(nextValue) ? nextValue : 0);
+    const start = parseInt(element.textContent, 10);
+    const from = Number.isFinite(start) ? start : 0;
+
+    if (from === target) {
+      element.textContent = String(target);
+      return;
+    }
+
+    const duration = 400; // ms
+    const startTime = performance.now();
+
+    const step = (now) => {
+      const progress = Math.min(1, (now - startTime) / duration);
+      const eased = 1 - (1 - progress) * (1 - progress); // ease-out simples
+      const value = Math.round(from + (target - from) * eased);
+      element.textContent = String(value);
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+
+    window.requestAnimationFrame(step);
+  };
+
+  /**
    * Atualiza o resumo diário abaixo da barra "Hábitos Concluídos".
    * Formato:
-   * - "Hoje: X de Y hábitos concluídos (Z%)"
+   * - "Hoje: X de Y hábitos concluídos"
    * - ou, se não houver hábitos, "Hoje: nenhum hábito cadastrado ainda"
    */
   const updateTodaySummary = ({
@@ -324,8 +388,23 @@
       return;
     }
 
-    const clamped = Math.max(0, Math.min(100, Number(todayPercent) || 0));
-    summaryEl.textContent = `Hoje: ${completedTodayCount} de ${totalHabits} hábitos concluídos (${clamped}%)`;
+    summaryEl.textContent = `Hoje: ${completedTodayCount} de ${totalHabits} hábitos concluídos`;
+  };
+
+  /**
+   * Atualiza os cards da seção "Estatísticas" (Dashboard / Perfil):
+   * - Dias de treino (dias com pelo menos 1 hábito concluído)
+   * - Hábitos rastreados (total de hábitos cadastrados)
+   */
+  const updateStatsCards = (trainingDays, trackedHabits) => {
+    const trainingEls = document.querySelectorAll('[data-stats-training-days]');
+    const trackedEls = document.querySelectorAll('[data-stats-tracked-habits]');
+
+    const safeTraining = Math.max(0, Number.isFinite(trainingDays) ? trainingDays : 0);
+    const safeTracked = Math.max(0, Number.isFinite(trackedHabits) ? trackedHabits : 0);
+
+    trainingEls.forEach((el) => animateStatNumber(el, safeTraining));
+    trackedEls.forEach((el) => animateStatNumber(el, safeTracked));
   };
 
   /**
@@ -374,10 +453,16 @@
       completedTodayCount,
     } = calculateLast7DaysProgress(habits);
 
-    // Atualiza barra de progresso, resumo diário e card de hábitos
+    // Constrói log diário completo e calcula quantos dias tiveram pelo menos 1 hábito concluído
+    const dailyLog = buildDailyCompletionLog(habits);
+    const trainingDays = dailyLog.filter((entry) => entry.habitosConcluidos > 0).length;
+    const trackedHabits = habits.length;
+
+    // Atualiza barra de progresso, resumo diário, card de hábitos e estatísticas
     updateDailyProgressUI(todayPercent);
     updateTodaySummary({ totalHabits, completedTodayCount, todayPercent });
     updateHabitsSummaryCard(averagePercent, currentStreakDays);
+    updateStatsCards(trainingDays, trackedHabits);
 
     // Se não há canvas ou Chart.js não foi carregado nesta página, apenas retorna.
     if (!canvas || typeof window.Chart === 'undefined') {
@@ -458,7 +543,7 @@
   // ---------- UI da página de hábitos ----------
 
   /**
-   * Renderiza a tabela de hábitos na página "Hábitos".
+   * Renderiza a tabela de hábitos na página "Hábitos" (visão desktop).
    */
   const renderHabitsTable = () => {
     const tbody = document.getElementById('habits-tbody');
@@ -523,11 +608,81 @@
   };
 
   /**
-   * Inicializa o formulário de criação de hábito e os eventos da tabela.
+   * Renderiza a lista de hábitos em formato de cards para o mobile.
+   * Usa a mesma fonte de dados da tabela e reaproveita classes de status e ações.
+   */
+  const renderHabitsCardsMobile = () => {
+    const container = document.getElementById('habits-cards-mobile');
+    if (!container) return;
+
+    const habits = getHabitsFromStorage();
+    const today = getTodayISODate();
+
+    if (!habits.length) {
+      container.innerHTML = `
+        <div class="habit-card center-align text-sub">
+          Nenhum hábito cadastrado ainda.
+        </div>
+      `;
+      return;
+    }
+
+    const cardsHtml = habits
+      .map((habit) => {
+        const doneToday = (habit.completedDates || []).includes(today);
+        const statusText = doneToday ? 'CONCLUÍDO' : 'NÃO CONCLUÍDO';
+        const statusClass = doneToday ? 'fh-status-chip fh-status-done' : 'fh-status-chip fh-status-pending';
+        const statusVariantClass = doneToday ? 'habit-status-concluido' : 'habit-status-nao-concluido';
+
+        return `
+          <article class="habit-card" data-habit-id="${habit.id}">
+            <header class="habit-card-header">
+              <h3 class="habit-card-title table-cell-wrap">${habit.nome}</h3>
+              <button
+                type="button"
+                class="${statusClass} habit-status-badge ${statusVariantClass}"
+                data-action="toggle-status"
+              >
+                ${statusText}
+              </button>
+            </header>
+            <div class="habit-card-body">
+              <p class="habit-card-meta"><strong>Frequência:</strong> ${habit.frequency || '-'}</p>
+              <p class="habit-card-meta"><strong>Objetivo:</strong> ${habit.goal || '-'}</p>
+            </div>
+            <footer class="habit-card-footer">
+              <div class="habit-card-actions-mobile">
+                <button
+                  type="button"
+                  class="habit-action-btn habit-action-btn--edit"
+                  data-action="edit-habit"
+                >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  class="habit-action-btn habit-action-btn--delete"
+                  data-action="delete-habit"
+                >
+                  Excluir
+                </button>
+              </div>
+            </footer>
+          </article>
+        `;
+      })
+      .join('');
+
+    container.innerHTML = cardsHtml;
+  };
+
+  /**
+   * Inicializa o formulário de criação de hábito e os eventos da tabela / cards.
    */
   const initHabitsPage = () => {
     const form = document.getElementById('create-habit-form');
     const tbody = document.getElementById('habits-tbody');
+    const mobileCardsContainer = document.getElementById('habits-cards-mobile');
 
     if (!form || !tbody) return; // não estamos na página de hábitos
 
@@ -539,8 +694,9 @@
     const goalInput = form.querySelector('#goal');
     const submitButton = form.querySelector('button[type="submit"]');
 
-    // Render inicial da tabela
+    // Render inicial da tabela (desktop) e dos cards (mobile, se houver container)
     renderHabitsTable();
+    renderHabitsCardsMobile();
 
     // Envio do formulário de criação/edição de hábito
     form.addEventListener('submit', (event) => {
@@ -578,12 +734,13 @@
       }
 
       renderHabitsTable();
+      renderHabitsCardsMobile();
 
       // Recalcula progresso e atualiza gráfico / barra de progresso
       renderHabitsProgressChart();
     });
 
-    // Delegação de eventos na tabela: status, editar e excluir
+    // Delegação de eventos na tabela: status, editar e excluir (desktop)
     tbody.addEventListener('click', (event) => {
       const target = event.target;
 
@@ -597,6 +754,7 @@
       if (target.closest('[data-action="toggle-status"]')) {
         toggleHabitTodayCompletion(habitId);
         renderHabitsTable();
+        renderHabitsCardsMobile();
         renderHabitsProgressChart();
         return;
       }
@@ -639,9 +797,71 @@
         }
 
         renderHabitsTable();
+        renderHabitsCardsMobile();
         renderHabitsProgressChart();
       }
     });
+
+    // Delegação de eventos nos cards mobile: status, editar e excluir
+    if (mobileCardsContainer) {
+      mobileCardsContainer.addEventListener('click', (event) => {
+        const target = event.target;
+        const card = target.closest('.habit-card[data-habit-id]');
+        if (!card) return;
+
+        const habitId = card.getAttribute('data-habit-id');
+        if (!habitId) return;
+
+        // Toggle de status
+        if (target.closest('[data-action="toggle-status"]')) {
+          toggleHabitTodayCompletion(habitId);
+          renderHabitsTable();
+          renderHabitsCardsMobile();
+          renderHabitsProgressChart();
+          return;
+        }
+
+        // Editar
+        if (target.closest('[data-action="edit-habit"]')) {
+          const habits = getHabitsFromStorage();
+          const habit = habits.find((h) => String(h.id) === String(habitId));
+          if (!habit) return;
+
+          nameInput.value = habit.nome || '';
+          frequencyInput.value = habit.frequency || '';
+          goalInput.value = habit.goal || '';
+
+          editingHabitId = habit.id;
+
+          if (submitButton) {
+            submitButton.innerHTML = '<i class="material-icons-round left">save</i>ATUALIZAR';
+          }
+
+          nameInput.focus();
+          return;
+        }
+
+        // Excluir
+        if (target.closest('[data-action="delete-habit"]')) {
+          const confirmed = window.confirm('Deseja realmente excluir este hábito?');
+          if (!confirmed) return;
+
+          deleteHabitFromStorage(habitId);
+
+          if (editingHabitId && String(editingHabitId) === String(habitId)) {
+            form.reset();
+            editingHabitId = null;
+            if (submitButton) {
+              submitButton.innerHTML = '<i class="material-icons-round left">save</i>SALVAR';
+            }
+          }
+
+          renderHabitsTable();
+          renderHabitsCardsMobile();
+          renderHabitsProgressChart();
+        }
+      });
+    }
   };
 
   // ---------- Inicialização global ----------
@@ -665,6 +885,7 @@
     updateHabitInStorage,
     deleteHabitFromStorage,
     calculateLast7DaysProgress,
+    buildDailyCompletionLog,
     renderHabitsProgressChart,
   };
 })();

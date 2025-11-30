@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FitHabit — Hábitos</title>
 
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('fithabit-theme');
+          if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {
+          // se não conseguir ler o localStorage, não faz nada
+        }
+      })();
+    </script>
+
     <!-- Materialize CSS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
@@ -21,9 +36,9 @@
       main.container { padding-top: 2rem; }
       h1 { margin: 2rem 0 1rem; }
 
-      /* cards “macios” */
+      /* cards “macios” (herdarão o visual de vidro via .app-glass-card) */
       .card-rounded { border-radius: 14px; overflow: hidden; }
-      .card-elev { box-shadow: 0 8px 24px rgba(2, 8, 20, 0.06); }
+      .card-elev { box-shadow: none; }
 
       /* cartões específicos */
       .form-card .card-content { padding: 1.5rem; }
@@ -158,23 +173,9 @@
 
       /* --- Formulário "Criar Novo Hábito" --- */
 
-      /* Card com animação suave de entrada e sombra moderna */
+      /* Card do formulário sem animação: aparece estático */
       .fh-habit-form-card {
-        border-radius: 18px;
-        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-        animation: fh-card-in 320ms ease-out;
         transform-origin: top left;
-      }
-
-      @keyframes fh-card-in {
-        from {
-          opacity: 0;
-          transform: translateY(8px) scale(0.98);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
       }
 
       /* Cabeçalho do card: título + subtítulo + detalhe visual */
@@ -287,48 +288,130 @@
       @media (max-width: 992px){
         .form-card { margin-bottom: 1.5rem; }
       }
+
+      /* -------- Tema escuro: ajustes de contraste para a página de Hábitos -------- */
+
+      /* Títulos e subtítulos dos cards ("Criar Novo Hábito" / "Hábitos Cadastrados") */
+      :root[data-theme="dark"] .habits-page .fh-habit-form-title {
+        color: #f9fafb !important;
+      }
+      :root[data-theme="dark"] .habits-page .fh-habit-form-subtitle {
+        color: #cbd5f5 !important;
+      }
+
+      /* Labels e campos do formulário */
+      :root[data-theme="dark"] .habits-page .fh-label {
+        color: #e5e7eb !important;
+      }
+      :root[data-theme="dark"] .habits-page .fh-input {
+        color: #f9fafb;
+        background-color: transparent;
+      }
+      /* No tema escuro, placeholders ficam ocultos por padrão
+         e aparecem apenas durante o foco do campo */
+      :root[data-theme="dark"] .habits-page .fh-input::placeholder {
+        color: transparent;
+      }
+      :root[data-theme="dark"] .habits-page .fh-input:focus::placeholder {
+        color: rgba(229, 231, 235, 0.5);
+      }
+
+      /* Tabela de hábitos: cabeçalho, células e linhas */
+      :root[data-theme="dark"] .habits-page #habits-table thead th {
+        color: #f9fafb !important;
+        font-weight: 600;
+      }
+      :root[data-theme="dark"] .habits-page #habits-table tbody td {
+        color: #e5e7eb !important;
+      }
+      :root[data-theme="dark"] .habits-page #habits-table thead tr,
+      :root[data-theme="dark"] .habits-page #habits-table tbody tr {
+        border-color: rgba(148, 163, 184, 0.25);
+      }
+      /* Linha logo abaixo do título "Hábitos Cadastrados" (header da tabela) */
+      :root[data-theme="dark"] .habits-page .table-head {
+        border-bottom-color: rgba(148, 163, 184, 0.25);
+      }
+
+      /* Chips de status */
+      :root[data-theme="dark"] .fh-status-chip.fh-status-done {
+        background-color: transparent;
+        border-color: var(--fh-primary, #2DDC9A);
+        color: var(--fh-primary, #2DDC9A);
+      }
+      :root[data-theme="dark"] .fh-status-chip.fh-status-pending {
+        color: #e5e7eb;
+        background-color: rgba(15, 23, 42, 0.85);
+        border-color: rgba(148, 163, 184, 0.6);
+      }
+
+      /* Links de ação (Editar / Excluir) */
+      :root[data-theme="dark"] .fh-table-link {
+        color: #38bdf8;
+      }
+      :root[data-theme="dark"] .fh-table-link-danger {
+        color: #f97373;
+      }
+
+      /* Texto dentro dos cards de vidro */
+      :root[data-theme="dark"] .habit-form-card,
+      :root[data-theme="dark"] .habit-table-card {
+        color: #e5e7eb;
+      }
     </style>
   </head>
   <body>
     <header class="navbar-fixed">
       <nav class="white" role="navigation" aria-label="Principal">
         <div class="nav-wrapper container">
-          <a href="index.html" class="brand-logo left">
-            <!-- prefira o SVG para nitidez; mantenha o PNG se for o que você tem -->
-            <img src="assets/img/logo-fithabit.png" alt="FitHabit" class="navbar-logo-img" loading="eager">
-          </a>
-          <span class="mobile-page-title hide-on-med-and-up">Hábitos</span>
-          <ul class="right hide-on-med-and-down">
-            <li><a href="index.html">Dashboard</a></li>
-            <li><a class="nav-link-active" href="habitos.html">Hábitos</a></li>
-            <li><a href="relatorios.html">Relatórios</a></li>
-            <li class="navbar-theme-toggle">
-              <div class="theme-toggle-wrapper">
-                <label class="switch theme-toggle">
-                  <input
-                    type="checkbox"
-                    class="checkbox"
-                    id="themeToggleSwitch"
-                    aria-label="Alternar tema"
-                  />
-                  <div class="slider"></div>
-                </label>
+          <div class="topbar desktop-navbar">
+            <div class="topbar-left">
+              <a href="index.html" class="brand-logo">
+                <!-- prefira o SVG para nitidez; mantenha o PNG se for o que você tem -->
+                <img
+                  id="logo-fithabit"
+                  src="assets/img/logo-fithabit.png"
+                  alt="FitHabit"
+                  class="navbar-logo-img topbar-logo"
+                  loading="eager"
+                >
+              </a>
+              <div class="desktop-nav-links hide-on-small-and-down">
+                <a href="index.html" class="fh-nav-link">Dashboard</a>
+                <a href="habitos.html" class="fh-nav-link nav-link-active">Hábitos</a>
+                <a href="relatorios.html" class="fh-nav-link">Relatórios</a>
               </div>
-            </li>
-            <li>
-              <a href="perfil.html" class="navbar-avatar-link">
+            </div>
+            <div class="topbar-center">
+              <h1 class="topbar-title">Hábitos</h1>
+            </div>
+            <div class="topbar-right">
+              <div class="navbar-theme-toggle">
+                <div class="theme-toggle-wrapper">
+                  <label class="switch theme-toggle">
+                    <input
+                      type="checkbox"
+                      class="checkbox"
+                      id="themeToggleSwitch"
+                      aria-label="Alternar tema"
+                    />
+                    <div class="slider"></div>
+                  </label>
+                </div>
+              </div>
+              <a href="perfil.html" class="navbar-avatar-link hide-on-small-and-down">
                 <div class="navbar-avatar" data-profile-avatar>
                   <i class="material-icons-round profile-avatar-icon">account_circle</i>
                 </div>
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </nav>
       
     </header>
 
-    <main class="page-content container">
+    <main class="page-content container habits-page page-habitos">
       <div class="section-header">
         <div class="section-header-accent" aria-hidden="true"></div>
         <div class="section-header-content">
@@ -341,8 +424,8 @@
 
       <div class="row" role="region" aria-label="Gestão de hábitos">
         <!-- Coluna esquerda: FORM em CARD -->
-        <aside class="col s12 m4 l3" aria-label="Criar novo hábito">
-          <div class="card form-card card-rounded card-elev fh-habit-form-card">
+        <aside class="col s12 m5 l4" aria-label="Criar novo hábito">
+          <div class="card form-card card-rounded app-glass-card fh-habit-form-card habit-form-card">
             <div class="card-content">
               <!-- Cabeçalho do formulário com título reforçado e subtítulo -->
               <div class="fh-habit-form-header">
@@ -400,7 +483,7 @@
                 </div>
 
                 <div class="fh-form-actions">
-                  <button class="btn btn-primary waves-effect" type="submit">
+                  <button class="btn btn-primary waves-effect habit-cta-btn" type="submit">
                     <i class="material-icons-round left">save</i>SALVAR
                   </button>
                 </div>
@@ -411,8 +494,8 @@
         
 
         <!-- Coluna direita: TABELA em CARD -->
-        <section class="col s12 m8 l9" aria-label="Lista de hábitos">
-          <div class="card table-card card-rounded card-elev">
+        <section class="col s12 m7 l8" aria-label="Lista de hábitos">
+          <div class="card table-card card-rounded app-glass-card habit-table-card">
             <div class="table-head">
               <div class="fh-habit-form-header">
                 <div class="fh-habit-form-accent" aria-hidden="true"></div>
@@ -422,21 +505,35 @@
               </div>
             </div>
             <div class="card-content">
-              <div class="table-wrap">
-                <table id="habits-table" class="highlight responsive-table table-clean">
-                  <thead>
-                    <tr>
-                      <th>Hábito</th>
-                      <th>Frequência</th>
-                      <th>Objetivo</th>
-                      <th>Status</th>
-                      <th class="right-align fh-actions-col" scope="col">Ação</th>
-                    </tr>
-                  </thead>
-                  <tbody id="habits-tbody">
-                    <!-- Linhas serão injetadas dinamicamente via JavaScript (fithabit.js) -->
-                  </tbody>
-                </table>
+              <!-- TABELA – versão desktop -->
+              <div class="habitos-tabela-wrapper">
+                <div class="table-wrap habitos-tabela">
+                  <table id="habits-table" class="highlight responsive-table table-clean">
+                    <thead>
+                      <tr>
+                        <th>Hábito</th>
+                        <th>Frequência</th>
+                        <th>Objetivo</th>
+                        <th>Status</th>
+                        <th class="right-align fh-actions-col" scope="col">Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody id="habits-tbody">
+                      <!-- Linhas serão injetadas dinamicamente via JavaScript (fithabit.js) -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- CARDS – versão mobile -->
+              <div class="habitos-cards-wrapper">
+                <div
+                  class="habits-cards-mobile habitos-lista-mobile"
+                  id="habits-cards-mobile"
+                  aria-label="Hábitos cadastrados (visualização em cartões)"
+                >
+                  <!-- Cards serão renderizados via JavaScript para dispositivos móveis -->
+                </div>
               </div>
             </div>
           </div>

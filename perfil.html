@@ -4,65 +4,100 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FitHabit — Perfil</title>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('fithabit-theme');
+          if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {
+          // se não conseguir ler o localStorage, não faz nada
+        }
+      })();
+    </script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
     <link rel="stylesheet" href="assets/css/materialize.custom.css" />
   </head>
-  <body>
+  <body class="page-perfil">
     <header class="navbar-fixed">
       <nav class="white" role="navigation" aria-label="Principal">
         <div class="nav-wrapper container">
-          <a href="index.html" class="brand-logo left">
-            <img src="assets/img/logo-fithabit.png" alt="FitHabit" class="navbar-logo-img" loading="eager">
-          </a>
-          <span class="mobile-page-title hide-on-med-and-up">Perfil</span>
-          
-          <ul class="right hide-on-med-and-down">
-            <li><a href="index.html">Dashboard</a></li>
-            <li><a href="habitos.html">Hábitos</a></li>
-            <li><a href="relatorios.html">Relatórios</a></li>
-            <li class="navbar-theme-toggle">
-              <div class="theme-toggle-wrapper">
-                <label class="switch theme-toggle">
-                  <input
-                    type="checkbox"
-                    class="checkbox"
-                    id="themeToggleSwitch"
-                    aria-label="Alternar tema"
-                  />
-                  <div class="slider"></div>
-                </label>
+          <div class="topbar desktop-navbar">
+            <div class="topbar-left">
+              <a href="index.html" class="brand-logo">
+                <img
+                  id="logo-fithabit"
+                  src="assets/img/logo-fithabit.png"
+                  alt="FitHabit"
+                  class="navbar-logo-img topbar-logo"
+                  loading="eager"
+                >
+              </a>
+              <div class="desktop-nav-links hide-on-small-and-down">
+                <a href="index.html" class="fh-nav-link">Dashboard</a>
+                <a href="habitos.html" class="fh-nav-link">Hábitos</a>
+                <a href="relatorios.html" class="fh-nav-link">Relatórios</a>
               </div>
-            </li>
-            <li>
-              <a class="nav-link-active" href="perfil.html">
+            </div>
+            <div class="topbar-center">
+              <h1 class="topbar-title">Perfil</h1>
+            </div>
+            <div class="topbar-right">
+              <div class="navbar-theme-toggle">
+                <div class="theme-toggle-wrapper">
+                  <label class="switch theme-toggle">
+                    <input
+                      type="checkbox"
+                      class="checkbox"
+                      id="themeToggleSwitch"
+                      aria-label="Alternar tema"
+                    />
+                    <div class="slider"></div>
+                  </label>
+                </div>
+              </div>
+              <a
+                href="perfil.html"
+                class="navbar-avatar-link hide-on-small-and-down"
+                aria-label="Ir para o perfil"
+              >
                 <div class="navbar-avatar" data-profile-avatar>
                   <i class="material-icons-round profile-avatar-icon">account_circle</i>
                 </div>
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </nav>
       
     </header>
 
-    <main class="page-content container">
-      <section class="center-align" style="margin-bottom:2rem;">
-        <div class="profile-avatar-lg" data-profile-avatar>
-          <i class="material-icons-round profile-avatar-icon">account_circle</i>
-        </div>
-        <h1 style="margin:.75rem 0 0 0;" data-profile-name>Sofia Oliveira</h1>
-        <p class="text-sub" style="margin:.25rem 0; color:#16a34a;" data-profile-bio>Entusiasta de fitness e bem-estar</p>
-        <div class="card" style="display:inline-block; border-radius:12px; background:#EDF2F7; box-shadow:none;">
-          <div class="card-content" style="padding:.75rem 1.5rem;">
-            <a href="#editProfileModal" class="btn btn-primary modal-trigger">
-              <i class="material-icons-round left">edit</i>Editar Perfil
-            </a>
+    <main class="page-content">
+      <div class="container profile-container">
+        <div class="row">
+          <div class="col s12">
+            <section class="profile-card app-glass-card center-align">
+              <div class="profile-avatar-lg" data-profile-avatar>
+                <i class="material-icons-round profile-avatar-icon">account_circle</i>
+              </div>
+              <h1 style="margin:.75rem 0 0 0;" data-profile-name>Sofia Oliveira</h1>
+              <p class="text-sub" style="margin:.25rem 0; color:#16a34a;" data-profile-bio>
+                Entusiasta de fitness e bem-estar
+              </p>
+              <div style="margin-top:1.25rem;">
+                <a href="#editProfileModal" class="btn btn-primary modal-trigger">
+                  <i class="material-icons-round left">edit</i>Editar Perfil
+                </a>
+              </div>
+            </section>
           </div>
         </div>
-      </section>
+      </div>
 
       <!-- Modal de edição de perfil -->
       <div id="editProfileModal" class="modal">
@@ -98,63 +133,6 @@
           <button type="submit" form="editProfileForm" class="btn btn-primary">Salvar alterações</button>
         </div>
       </div>
-
-      <section style="margin-bottom:1.5rem;">
-        <h5>Estatísticas</h5>
-        <div class="row">
-          <div class="col s12 m4">
-            <div class="card" style="border:1px solid #E5E7EB; border-radius:14px; box-shadow:none;">
-              <div class="card-content center-align">
-                <div class="use-tnum" style="font-size:2rem; font-weight:700;">150</div>
-                <div class="text-sub" style="margin-top:.25rem;">Dias de treino</div>
-              </div>
-            </div>
-          </div>
-          <div class="col s12 m4">
-            <div class="card" style="border:1px solid #E5E7EB; border-radius:14px; box-shadow:none;">
-              <div class="card-content center-align">
-                <div class="use-tnum" style="font-size:2rem; font-weight:700;">30</div>
-                <div class="text-sub" style="margin-top:.25rem;">Hábitos rastreados</div>
-              </div>
-            </div>
-          </div>
-          <div class="col s12 m4">
-            <div class="card" style="border:1px solid #E5E7EB; border-radius:14px; box-shadow:none;">
-              <div class="card-content center-align">
-                <div class="use-tnum" style="font-size:2rem; font-weight:700;">10</div>
-                <div class="text-sub" style="margin-top:.25rem;">Conquistas</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h5>Hábitos Ativos</h5>
-        <div class="card hoverable">
-          <div class="card-content" style="display:flex; align-items:center; gap:1rem;">
-            <div style="flex:1 1 auto;">
-              <div class="text-sub">Manhã</div>
-              <div style="font-weight:600;">Corrida matinal</div>
-              <div class="text-sub">30 minutos de corrida leve</div>
-              <div style="margin-top:.5rem;"><button class="btn waves-effect" data-mark-done><i class="material-icons-round left">check_circle</i>Marcar concluído</button></div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=600&auto=format&fit=crop" alt="thumb" style="border-radius:.75rem; width:280px; height:140px; object-fit:cover;" />
-          </div>
-        </div>
-
-        <div class="card hoverable">
-          <div class="card-content" style="display:flex; align-items:center; gap:1rem;">
-            <div style="flex:1 1 auto;">
-              <div class="text-sub">Tarde</div>
-              <div style="font-weight:600;">Meditação</div>
-              <div class="text-sub">15 minutos de meditação guiada</div>
-              <div style="margin-top:.5rem;"><button class="btn waves-effect" data-mark-done><i class="material-icons-round left">check_circle</i>Marcar concluído</button></div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=600&auto=format&fit=crop" alt="thumb" style="border-radius:.75rem; width:280px; height:140px; object-fit:cover;" />
-          </div>
-        </div>
-      </section>
 
       <div class="section" aria-live="polite"></div>
     </main>

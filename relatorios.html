@@ -4,6 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FitHabit — Relatórios</title>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('fithabit-theme');
+          if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {
+          // se não conseguir ler o localStorage, não faz nada
+        }
+      })();
+    </script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
@@ -13,42 +27,53 @@
     <header class="navbar-fixed">
       <nav class="white" role="navigation" aria-label="Principal">
         <div class="nav-wrapper container">
-          <a href="index.html" class="brand-logo left">
-            <img src="assets/img/logo-fithabit.png" alt="FitHabit" class="navbar-logo-img" loading="eager">
-          </a>
-          <span class="mobile-page-title hide-on-med-and-up">Relatórios</span>
-          
-          <ul class="right hide-on-med-and-down">
-            <li><a href="index.html">Dashboard</a></li>
-            <li><a href="habitos.html">Hábitos</a></li>
-            <li><a class="nav-link-active" href="relatorios.html">Relatórios</a></li>
-            <li class="navbar-theme-toggle">
-              <div class="theme-toggle-wrapper">
-                <label class="switch theme-toggle">
-                  <input
-                    type="checkbox"
-                    class="checkbox"
-                    id="themeToggleSwitch"
-                    aria-label="Alternar tema"
-                  />
-                  <div class="slider"></div>
-                </label>
+          <div class="topbar desktop-navbar">
+            <div class="topbar-left">
+              <a href="index.html" class="brand-logo">
+                <img
+                  id="logo-fithabit"
+                  src="assets/img/logo-fithabit.png"
+                  alt="FitHabit"
+                  class="navbar-logo-img topbar-logo"
+                  loading="eager"
+                >
+              </a>
+              <div class="desktop-nav-links hide-on-small-and-down">
+                <a href="index.html" class="fh-nav-link">Dashboard</a>
+                <a href="habitos.html" class="fh-nav-link">Hábitos</a>
+                <a href="relatorios.html" class="fh-nav-link nav-link-active">Relatórios</a>
               </div>
-            </li>
-            <li>
-              <a href="perfil.html" class="navbar-avatar-link">
+            </div>
+            <div class="topbar-center">
+              <h1 class="topbar-title">Relatórios</h1>
+            </div>
+            <div class="topbar-right">
+              <div class="navbar-theme-toggle">
+                <div class="theme-toggle-wrapper">
+                  <label class="switch theme-toggle">
+                    <input
+                      type="checkbox"
+                      class="checkbox"
+                      id="themeToggleSwitch"
+                      aria-label="Alternar tema"
+                    />
+                    <div class="slider"></div>
+                  </label>
+                </div>
+              </div>
+              <a href="perfil.html" class="navbar-avatar-link hide-on-small-and-down">
                 <div class="navbar-avatar" data-profile-avatar>
                   <i class="material-icons-round profile-avatar-icon">account_circle</i>
                 </div>
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </nav>
       
     </header>
 
-    <main class="page-content container">
+    <main class="page-content container reports-page">
       <div class="section-header">
         <div class="section-header-accent" aria-hidden="true"></div>
         <div class="section-header-content">
@@ -61,13 +86,20 @@
 
       <div class="row">
         <div class="col s12">
-          <div class="card">
+          <div class="card app-glass-card calendar-card">
             <div class="card-content">
-              <div class="row" style="align-items:center; margin-bottom:.5rem;">
-                <div class="col s12"><strong>Calendário</strong></div>
+              <div class="section-header" style="margin-bottom:.75rem;">
+                <div class="section-header-accent" aria-hidden="true"></div>
+                <div class="section-header-content">
+                  <h2 class="section-header-title">Calendário</h2>
+                </div>
               </div>
               <style>
                 /* Estilos básicos do calendário de relatórios */
+                .calendar-wrapper{
+                  width:100%;
+                }
+
                 #reports-calendar{
                   padding:0;
                   border:none;
@@ -176,17 +208,252 @@
                   color:#0a2419;
                 }
 
-                /* Empilha os dois calendários em telas menores */
-                @media (max-width: 600px){
+                /* ---------------- Layout mobile: calendários mais confortáveis ---------------- */
+                /* Empilha os dois calendários em telas menores e aumenta o conforto de toque */
+                @media (max-width: 768px){
                   #reports-calendar .reports-cal-wrapper{
                     flex-direction:column;
+                    align-items:stretch;       /* segue o alinhamento de conteúdo do card */
+                    justify-content:flex-start;
+                    width:100%;
                   }
+
+                  /* Cada mês ocupa praticamente toda a largura útil, com um limite confortável
+                     para caber nas telas pequenas, centralizados dentro do card */
+                  #reports-calendar .calendar-month{
+                    min-width:0;
+                    width:100%;
+                    max-width:100%;          /* nunca maior que o card */
+                    box-sizing:border-box;
+                    margin:0 0 1rem 0;       /* alinhado à mesma coluna do conteúdo interno */
+                  }
+
+                  /* Dias da semana (D S T Q Q S S) um pouco maiores */
+                  #reports-calendar .cal-head{
+                    font-size:0.95rem;
+                  }
+
+                  /* Grade com mais respiro entre os círculos */
+                  #reports-calendar .cal-grid{
+                    gap:0.5rem;
+                  }
+
+                  /* Círculos dos dias maiores, mantendo boa tocabilidade,
+                     sem estourar a largura do card */
+                  #reports-calendar .cal-cell{
+                    width:40px;
+                    height:40px;
+                    line-height:40px;
+                    font-size:0.95rem;
+                  }
+                }
+
+                /* ---------------- Tema escuro: calendário de relatórios ---------------- */
+                :root[data-theme="dark"] .calendar-card{
+                  border-color:rgba(148,163,184,0.18);
+                  background:radial-gradient(circle at top left, rgba(148,163,184,0.08), transparent);
+                }
+
+                :root[data-theme="dark"] #reports-calendar .calendar-month{
+                  background-color:rgba(15,23,42,0.96);
+                  /* mesma borda suave dos demais cards de vidro em tema escuro */
+                  border-color:rgba(148,163,184,0.25);
+                  box-shadow:none;
+                }
+
+                :root[data-theme="dark"] #reports-calendar .cal-month{
+                  color:#e5e7eb;
+                }
+
+                :root[data-theme="dark"] #reports-calendar .cal-head{
+                  color:#cbd5f5;
+                }
+
+                :root[data-theme="dark"] #reports-calendar .cal-cell{
+                  background-color:#0f172a;
+                  color:#e5e7eb;
+                  box-shadow:none;
+                }
+
+                :root[data-theme="dark"] #reports-calendar .cal-future{
+                  background-color:#020617;
+                  color:rgba(148,163,184,0.6);
+                  box-shadow:none;
+                }
+
+                :root[data-theme="dark"] #reports-calendar .cal-range-start,
+                :root[data-theme="dark"] #reports-calendar .cal-range-end{
+                  background:linear-gradient(135deg,#22C55E,#2DDC9A);
+                  color:#0b1120;
+                  font-weight:600;
+                  box-shadow:0 0 0 2px rgba(34,197,94,0.6);
+                }
+
+                :root[data-theme="dark"] #reports-calendar .cal-range-between{
+                  background-color:rgba(34,197,94,0.12);
+                  color:#e5e7eb;
+                }
+
+                /* ---------------- Seletor de intervalo por datas (mobile) ---------------- */
+                .date-range-mobile{
+                  display:none;
+                  padding:16px;
+                  border-radius:24px;
+                  width:100%;
+                  box-sizing:border-box;
+                  margin-top:16px;
+                  gap:12px;
+                  flex-direction:column;
+                  background:var(--fh-glass-bg, rgba(255,255,255,0.9));
+                  border:1px solid var(--fh-glass-border, rgba(255,255,255,0.7));
+                  box-shadow:0 10px 25px var(--fh-glass-shadow, rgba(15,23,42,0.18));
+                  backdrop-filter:blur(12px);
+                  -webkit-backdrop-filter:blur(12px);
+                }
+
+                .date-range-mobile .date-field,
+                .date-range-mobile .date-input{
+                  display:flex;
+                  flex-direction:column;
+                  gap:4px;
+                  width:100%;
+                }
+
+                .date-range-mobile .date-input-wrapper{
+                  position:relative;
+                  width:100%;
+                }
+
+                .date-range-mobile label{
+                  font-size:0.85rem;
+                  font-weight:500;
+                  color:var(--fh-theme-text-secondary, #0b1c0e);
+                }
+
+                .date-range-mobile .date-mask{
+                  padding:10px 12px;
+                  border-radius:12px;
+                  border:1px solid rgba(0,0,0,0.08);
+                  font-size:0.9rem;
+                  outline:none;
+                  background:var(--fh-theme-bg-card, #ffffff);
+                  color:var(--fh-theme-text-primary, #0b1c0e);
+                  width:100%;
+                  box-sizing:border-box;
+                }
+
+                .date-range-mobile .date-mask:focus{
+                  border-color:var(--fh-primary);
+                  box-shadow:0 0 0 1px var(--fh-primary);
+                }
+
+                .btn-filtrar-periodo{
+                  margin-top:8px;
+                  align-self:stretch;
+                  width:100%;
+                  padding:12px;
+                  border-radius:999px;
+                  border:none;
+                  font-weight:600;
+                  font-size:0.9rem;
+                  cursor:pointer;
+                  background:var(--fh-primary, #22e19f);
+                  color:#ffffff;
+                  box-shadow:0 12px 25px rgba(34,225,159,0.35);
+                  transition:
+                    transform .15s ease,
+                    box-shadow .15s ease,
+                    filter .15s ease;
+                }
+
+                .btn-filtrar-periodo:hover{
+                  filter:brightness(.97);
+                  transform:translateY(-1px);
+                  box-shadow:0 16px 30px rgba(34,225,159,0.45);
+                }
+
+                .btn-filtrar-periodo:active{
+                  transform:translateY(0);
+                  box-shadow:0 8px 18px rgba(34,225,159,0.3);
+                  filter:brightness(.94);
+                }
+
+                /* Desktop / tablet: mantém apenas os calendários visíveis */
+                @media (min-width: 769px){
+                  .calendar-wrapper{
+                    display:block;
+                  }
+                  .date-range-mobile{
+                    display:none;
+                  }
+                }
+
+                /* Mobile: esconde os calendários e mostra o seletor de datas */
+                @media (max-width: 768px){
+                  .calendar-wrapper{
+                    display:none;
+                  }
+                  .date-range-mobile{
+                    display:flex;
+                    width:100%;
+                  }
+                }
+
+                /* Tema escuro para o seletor de datas mobile */
+                :root[data-theme="dark"] .date-range-mobile{
+                  background:rgba(7,12,24,0.9);
+                  border-color:var(--fh-glass-border, rgba(148,163,184,0.45));
+                  box-shadow:0 18px 45px var(--fh-glass-shadow, rgba(0,0,0,0.55));
+                }
+
+                :root[data-theme="dark"] .date-range-mobile label{
+                  color:var(--fh-theme-text-secondary, #E2E8F0);
+                }
+
+                :root[data-theme="dark"] .date-range-mobile .date-mask{
+                  background:#020617;
+                  border-color:rgba(148,163,184,0.5);
+                  color:var(--fh-theme-text-primary, #F9FAFB);
                 }
               </style>
               <div class="row">
                 <div class="col s12">
-                  <div id="reports-calendar" class="cal-wrap">
-                    <!-- Calendário será gerado dinamicamente via JS -->
+                  <div class="calendar-wrapper">
+                    <div id="reports-calendar" class="cal-wrap">
+                      <!-- Calendário será gerado dinamicamente via JS -->
+                    </div>
+                  </div>
+
+                  <div class="date-range-mobile">
+                    <div class="date-input">
+                      <label for="data-inicial">Data inicial</label>
+                      <div class="date-input-wrapper">
+                        <input
+                          id="data-inicial"
+                          name="dataInicial"
+                          type="text"
+                          class="date-mask"
+                          placeholder="dd/mm/aaaa"
+                          autocomplete="off"
+                        />
+                      </div>
+                    </div>
+                    <div class="date-input">
+                      <label for="data-final">Data final</label>
+                      <div class="date-input-wrapper">
+                        <input
+                          id="data-final"
+                          name="dataFinal"
+                          type="text"
+                          class="date-mask"
+                          placeholder="dd/mm/aaaa"
+                          autocomplete="off"
+                        />
+                      </div>
+                    </div>
+                    <button type="button" class="btn-filtrar-periodo">
+                      Aplicar período
+                    </button>
                   </div>
                 </div>
               </div>
@@ -197,17 +464,22 @@
 
       <div class="row">
         <div class="col s12">
-          <div class="card hoverable">
+          <div class="card hoverable app-glass-card chart-card relatorio-grafico-card">
             <div class="card-content">
-              <div class="row" style="margin-bottom:.5rem;">
-                <div class="col s12">
-                  <p class="text-sub" data-reports-range>
+              <div class="section-header" style="margin-bottom:.75rem;">
+                <div class="section-header-accent" aria-hidden="true"></div>
+                <div class="section-header-content">
+                  <h2 class="section-header-title" data-reports-range>
                     Exibindo os últimos 30 dias
-                  </p>
+                  </h2>
                 </div>
               </div>
-              <div style="height:260px; border:1px solid var(--fh-theme-border, #E5E7EB); border-radius:12px; background:var(--fh-theme-bg-card, #fff); padding:12px;">
-                <canvas id="reportsChart" aria-label="Gráfico de progresso de hábitos por período" role="img"></canvas>
+              <div class="reports-chart-container grafico-container">
+                <canvas
+                  id="reportsChart"
+                  aria-label="Gráfico de progresso de hábitos por período"
+                  role="img"
+                ></canvas>
               </div>
             </div>
           </div>

@@ -50,6 +50,14 @@
     root.setAttribute('data-theme', normalized);
     storeTheme(normalized);
 
+    // Atualiza a logo conforme o tema
+    const logoEl = document.getElementById('logo-fithabit');
+    if (logoEl) {
+      logoEl.src = normalized === THEME_DARK
+        ? 'assets/img/logo-invertida.png'
+        : 'assets/img/logo-fithabit.png';
+    }
+
     // Se o módulo principal FitHabit estiver carregado, re-renderiza o gráfico
     if (window.FitHabit && typeof window.FitHabit.renderHabitsProgressChart === 'function') {
       window.FitHabit.renderHabitsProgressChart();

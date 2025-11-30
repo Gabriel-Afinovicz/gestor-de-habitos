@@ -7,6 +7,9 @@
   --fh-secondary:#0A2419; /* texto base */
   --fh-success:#22C55E; --fh-warning:#F59E0B; --fh-error:#EF4444; --fh-info:#0EA5E9;
   --fh-surface:#F8FAFC; --fh-border:#E5E7EB; --fh-subtitle:#334155;
+
+  /* Padding lateral padrão em mobile para alinhar conteúdo do dashboard */
+  --fh-page-padding-mobile:16px;
 }
 
 html{font-family:'Inter','Manrope',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
@@ -18,27 +21,191 @@ body{color:var(--fh-secondary);background-color:var(--fh-surface)}
 .nav-wrapper a{color:#0A2419!important}
 nav.white, nav{background-color:var(--fh-surface)!important; box-shadow:none}
 
+/* Layout principal da navbar: logo à esquerda, título centralizado, switch/avatar à direita */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:64px;
+  padding:0;              /* espaçamentos vão nas laterais específicas */
+  box-sizing:border-box;
+}
+
+.topbar-left,
+.topbar-center,
+.topbar-right{
+  display:flex;
+  align-items:center;
+}
+
+/* Laterais com largura automática (apenas o conteúdo) */
+.topbar-left,
+.topbar-right{
+  flex:0 0 auto;
+  align-items:center;
+}
+
+/* Centro ocupa o espaço restante e centraliza o título */
+.topbar-center{
+  flex:1 1 auto;
+  justify-content:center;
+  text-align:center;
+}
+
+.topbar-title{
+  font-size:1rem;
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:var(--fh-theme-nav-link, #0A2419);
+  margin:0;
+}
+
+/* Links de navegação do desktop dentro da topbar (escondidos em mobile/tablet) */
+.desktop-nav-links{
+  display:none;
+}
+
 /* Logo imagem na navbar */
 /* Logo no navbar — alinha e evita corte */
-nav .brand-logo{display:flex;align-items:center;height:64px}
-.navbar-logo-img{
+nav .brand-logo{
+  display:flex;
+  align-items:center;
+  height:64px;
+  position:static; /* evita comportamento absoluto do Materialize */
+  margin-left:0;
+  left:0;
+  transform:none;
+}
+.navbar-logo-img,
+.topbar-logo{
   height:44px;   /* tamanho padrão em desktop, mais proporcional ao título */
   width:auto;
   display:block;
 }
 @media (max-width: 600px){
-  .navbar-logo-img{
+  .navbar-logo-img,
+  .topbar-logo{
     height:32px; /* levemente menor em telas bem estreitas, ainda bem visível */
   }
-  .mobile-page-title{
-    display:inline-block;
-    position:absolute;
-    right:0;
-    top:0;
-    height:64px;
-    line-height:64px;
-    font-weight:700;
-    color:#0A2419;
+  .topbar-title{
+    font-size:0.9rem;
+  }
+}
+
+/* Espaçamentos laterais da logo e do switch (desktop + mobile) */
+.topbar-left{
+  padding-left:20px;
+}
+.topbar-right{
+  padding-right:20px;
+}
+
+@media (max-width: 600px){
+  .topbar-left{
+    padding-left:20px;
+  }
+  .topbar-right{
+    padding-right:20px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Layout específico para tablets (entre 600px e 1024px)
+   ------------------------------------------------------------------ */
+@media (min-width: 600px) and (max-width: 1024px){
+  /* Navbar: pequenos ajustes de escala para tablet */
+  .topbar-title{
+    font-size:0.95rem;
+  }
+  .navbar-logo-img,
+  .topbar-logo{
+    height:38px;
+  }
+
+  /* Conteúdo geral: respiro lateral um pouco menor que desktop */
+  .page-content{
+    padding-left:24px;
+    padding-right:24px;
+  }
+
+  /* Dashboard: garante boa leitura dos cards em tablet */
+  .dashboard-page .stats-card .card-content{
+    padding-left:16px;
+    padding-right:16px;
+  }
+  .dashboard-page .progress-summary-card{
+    max-width:840px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .dashboard-page .chart-card{
+    max-width:840px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  /* Container de gráfico no dashboard e relatórios com altura confortável */
+  .habits-chart-container{
+    height:260px;
+    min-height:240px;
+  }
+  .grafico-container,
+  .reports-chart-container{
+    height:280px;
+  }
+
+  /* Hábitos: cards principais com largura confortável em tablet */
+  .habits-page .habit-form-card,
+  .habits-page .habit-table-card{
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  /* Relatórios: calendário + gráfico alinhados e centrados em tablet */
+  .reports-page .calendar-card,
+  .reports-page .chart-card{
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Mobile + Tablet (601px–1400px): layout estilo mobile, mas
+   na aba Hábitos mantém 2 colunas lado a lado (form + cards)
+   ------------------------------------------------------------------ */
+@media (min-width: 601px) and (max-width: 1400px){
+  /* Aba Hábitos: mantém estrutura lateral (form à esquerda, lista à direita) */
+  .page-habitos [role="region"][aria-label="Gestão de hábitos"]{
+    display:flex;
+    flex-direction:row;
+    align-items:flex-start;
+    gap:24px;
+  }
+
+  /* Coluna do formulário (esquerda) */
+  .page-habitos aside[aria-label="Criar novo hábito"],
+  .page-habitos .habits-form-column{
+    flex:0 0 35%;
+    max-width:400px;
+  }
+
+  /* Coluna da listagem (direita) – cards de hábitos */
+  .page-habitos section[aria-label="Lista de hábitos"],
+  .page-habitos .habits-list-column{
+    flex:1 1 auto;
+    min-width:0;
+  }
+
+  /* Páginas em modo "tablet": conteúdo centralizado com largura confortável */
+  .dashboard-page.container,
+  .habits-page.container,
+  .reports-page.container{
+    max-width:960px;
+    margin:0 auto;
   }
 }
 /* Avatar e links na navbar alinhados ao centro da linha */
@@ -143,6 +310,105 @@ nav .nav-wrapper ul.right li a img{display:block;height:36px;width:36px;border-r
   justify-content:center;
 }
 
+/* Avatar na navbar como link para o perfil */
+.navbar-avatar-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+.navbar-avatar-link .navbar-avatar{
+  border-radius:50%;
+  border:2px solid transparent;
+  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.navbar-avatar-link:hover .navbar-avatar{
+  transform:translateY(-1px);
+  box-shadow:0 4px 10px rgba(15,23,42,0.35);
+}
+
+/* Estado ativo do avatar na página de perfil */
+body.page-perfil .navbar-avatar-link .navbar-avatar{
+  border-color:var(--fh-primary, #2DDC9A);
+  box-shadow:0 0 0 2px rgba(45,220,154,0.3);
+}
+
+/* Layout geral da página de perfil: centraliza o card na viewport */
+.profile-container{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:calc(100vh - 140px); /* considera navbar + possível bottom nav */
+}
+
+/* Card base com efeito de vidro (glassmorphism) reutilizável */
+.app-glass-card{
+  padding:0;
+  border-radius:24px;
+  border:1px solid var(--fh-glass-border, rgba(255,255,255,0.65));
+  background:var(--fh-glass-bg, linear-gradient(135deg, rgba(255,255,255,0.88), rgba(230,244,255,0.7)));
+  box-shadow:0 18px 45px var(--fh-glass-shadow, rgba(15,23,42,0.18));
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+}
+
+/* Card específico de perfil: controla largura e espaçamento interno */
+.profile-card{
+  width:100%;
+  max-width:400px;
+  margin:0 auto;
+  padding:32px 32px 36px;
+}
+
+/* Ajustes contextuais para outros cards de vidro */
+.habit-form-card{
+  padding:24px 24px 28px;
+}
+
+.habit-table-card{
+  padding:16px 0 0;
+}
+
+.calendar-card,
+.chart-card{
+  padding:24px 24px 28px;
+}
+
+.stats-card{
+  padding:20px 20px 24px;
+}
+
+.progress-summary-card{
+  margin-top:16px;
+  padding:20px 20px 24px;
+}
+
+/* Botão "Criar Novo Hábito" no card de progresso do dia */
+.dashboard-cta-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto; /* centraliza dentro do card */
+}
+
+/* Botão "SALVAR" no formulário de hábitos: replica o estilo de CTA principal,
+   mas ocupa praticamente toda a largura interna do card em todas as larguras */
+.habit-cta-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:100%;
+  margin:0 auto;
+}
+
+@media (max-width: 600px){
+  .dashboard-cta-btn{
+    width:100%;      /* ocupa toda a largura útil do card no mobile */
+    max-width:none;
+  }
+}
+
 /* Hierarquia tipográfica (levemente menor) */
 h1{font-size:1.75rem; font-weight:700; letter-spacing:-0.01em}
 h2{font-size:1.25rem; font-weight:600}
@@ -153,6 +419,83 @@ h2{font-size:1.25rem; font-weight:600}
   padding-top:32px;   /* mesmo espaçamento vertical do index (Dashboard) */
   padding-left:40px;
   padding-right:40px;
+}
+@media (max-width: 600px){
+  /* Dashboard (mobile): cards em full width encostados nas laterais */
+  .dashboard-page{
+    padding-left:0;
+    padding-right:0;
+  }
+  .dashboard-page.container{
+    width:100%;
+    max-width:none;
+  }
+  /* Título principal "Progresso do Dia" alinhado com o conteúdo dos cards */
+  .dashboard-page > .section-header{
+    margin-left:var(--fh-page-padding-mobile);
+    margin-right:var(--fh-page-padding-mobile);
+  }
+  /* Títulos de seção de primeiro nível dentro do dashboard (como "Estatísticas") */
+  .dashboard-page section > .section-header{
+    margin-left:var(--fh-page-padding-mobile);
+    margin-right:var(--fh-page-padding-mobile);
+  }
+  /* Cards encostados, conteúdo interno alinhado pela mesma coluna */
+  .dashboard-page .card{
+    margin-left:0;
+    margin-right:0;
+  }
+  /* Remove padding lateral extra de cards específicos no dashboard para alinhar com o header */
+  .dashboard-page .chart-card,
+  .dashboard-page .stats-card{
+    padding-left:0;
+    padding-right:0;
+  }
+  .dashboard-page .card .card-content{
+    padding-left:var(--fh-page-padding-mobile);
+    padding-right:var(--fh-page-padding-mobile);
+  }
+  /* Card de progresso diário não usa .card-content, então aplicamos direto */
+  .dashboard-page .progress-summary-card{
+    padding-left:var(--fh-page-padding-mobile);
+    padding-right:var(--fh-page-padding-mobile);
+  }
+
+  /* Hábitos (mobile): replica alinhamento lateral do dashboard */
+  .habits-page{
+    padding-left:0;
+    padding-right:0;
+  }
+  .habits-page.container{
+    width:100%;
+    max-width:none;
+  }
+  /* Título "Cadastrar Hábito" alinhado com a mesma coluna do dashboard */
+  .habits-page > .section-header{
+    margin-left:var(--fh-page-padding-mobile);
+    margin-right:var(--fh-page-padding-mobile);
+  }
+  /* Cards "Criar Novo Hábito" e "Hábitos Cadastrados" encostados com conteúdo alinhado */
+  .habits-page .habit-form-card,
+  .habits-page .habit-table-card{
+    padding-left:0;
+    padding-right:0;
+  }
+  /* Todos os cards da página de Hábitos ocupam 100% da largura, colados nas laterais */
+  .habits-page .card{
+    margin-left:0;
+    margin-right:0;
+  }
+  .habits-page .habit-form-card .card-content,
+  .habits-page .habit-table-card .card-content{
+    padding-left:var(--fh-page-padding-mobile);
+    padding-right:var(--fh-page-padding-mobile);
+  }
+  /* Header da tabela "Hábitos Cadastrados" alinhado com a tabela e demais conteúdos */
+  .habits-page .habit-table-card .table-head{
+    padding-left:var(--fh-page-padding-mobile);
+    padding-right:var(--fh-page-padding-mobile);
+  }
 }
 /* Primeiro header principal da página (com barrinha verde) */
 .page-content > .section-header:first-of-type{
@@ -195,6 +538,390 @@ h2{font-size:1.25rem; font-weight:600}
   font-size:2rem;
   font-weight:700;
   margin:0;
+}
+
+/* Utilitários de visibilidade responsiva para layouts duplicados (tabela x cards) */
+.desktop-only{display:block;}
+.mobile-only{display:none;}
+
+/* Hábitos Cadastrados: wrappers específicos de tabela (desktop) e cards (mobile/tablet) */
+.habitos-tabela-wrapper{display:block;}
+.habitos-cards-wrapper{display:none;}
+
+/* Mobile + Tablet (até 1400px): usar apenas cards (estilo mobile) na aba Hábitos */
+@media (max-width: 1400px){
+  .desktop-only{display:none;}
+  .mobile-only{display:block;}
+
+  .habitos-tabela-wrapper{display:none;}
+  .habitos-cards-wrapper{display:block;}
+}
+
+/* ----------------------- Ajustes de desktop (>= 1025px) ----------------------- */
+@media (min-width: 1025px){
+  /* Wrapper da tabela ocupa toda a largura interna do card, sem corte à esquerda */
+  .habits-page .habitos-tabela{
+    width:100%;
+    max-width:100%;
+    overflow:visible;
+  }
+
+  /* Card da tabela nunca pode cortar o conteúdo (Editar/Excluir) */
+  .habits-page .habit-table-card,
+  .habits-page .habit-table-card .card-content{
+    overflow:visible;
+  }
+
+  /* Garante que o conteúdo da tabela respeite o mesmo recuo interno do card */
+  .habits-page .habit-table-card .card-content{
+    padding-left:16px;
+    padding-right:16px;
+  }
+
+  /* Primeiro cabeçalho/célula com padding extra para não grudar na borda */
+  .habits-page #habits-table th:first-child,
+  .habits-page #habits-table td:first-child{
+    padding-left:16px;
+  }
+
+  /* Espaço horizontal entre Status (penúltima) e Ação (última) */
+  .habits-page #habits-table th:nth-last-child(2),
+  .habits-page #habits-table td:nth-last-child(2){
+    padding-right:12px;  /* respiro depois do badge de status */
+  }
+
+  /* Coluna "Ação" com largura suficiente para Editar/Excluir */
+  .habits-page #habits-table th:last-child,
+  .habits-page #habits-table td:last-child{
+    width:150px;
+    white-space:nowrap;
+    text-align:center; /* título e células de Ação centralizados na coluna */
+    padding-left:12px;  /* respiro antes dos botões Editar/Excluir */
+    padding-right:0;
+  }
+
+  .habits-page .fh-table-actions{
+    display:flex;
+    flex-direction:column;  /* um em cima do outro */
+    align-items:center;     /* centraliza dentro da coluna */
+    gap:4px;
+    flex-wrap:nowrap;
+  }
+
+  .habits-page .fh-table-actions .fh-table-link{
+    flex:0 0 auto;
+    background:transparent;
+    border:none;
+    padding:0;
+    border-radius:0;
+    font-size:0.8rem;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:none;
+    transform:none;
+  }
+
+  /* Editar – azul (texto) */
+  .habits-page .fh-table-actions .fh-table-link:not(.fh-table-link-danger){
+    color:#2196f3;
+  }
+
+  /* Excluir – vermelho (texto) */
+  .habits-page .fh-table-actions .fh-table-link-danger{
+    color:#f97373;
+  }
+
+  .habits-page .fh-table-actions .fh-table-link:hover,
+  .habits-page .fh-table-actions .fh-table-link-danger:hover{
+    text-decoration:underline;
+  }
+}
+
+/* Versão mobile da lista de hábitos (cards) */
+.habits-cards-mobile{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  margin-top:1rem;
+}
+.habits-cards-mobile .habit-card{
+  border-radius:24px;
+  border:1px solid var(--fh-glass-border, rgba(255,255,255,0.65));
+  background:var(--fh-glass-bg, linear-gradient(135deg, rgba(255,255,255,0.88), rgba(230,244,255,0.7)));
+  box-shadow:0 18px 45px var(--fh-glass-shadow, rgba(15,23,42,0.18));
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  padding:16px 18px 18px;
+}
+.habits-cards-mobile .habit-card-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:.75rem;
+  margin-bottom:.5rem;
+}
+.habits-cards-mobile .habit-card-title{
+  font-size:1.45rem;      /* mesmo tamanho do título "Hábitos Cadastrados" */
+  font-weight:700;        /* mesmo peso do título de seção */
+  margin:0;
+}
+.habits-cards-mobile .habit-card-meta{
+  font-size:.9rem;
+  color:var(--fh-subtitle);
+  margin:.1rem 0;
+}
+.habits-cards-mobile .habit-card-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:.75rem;
+}
+.habits-cards-mobile .habit-card-actions{
+  display:inline-flex;
+  align-items:center;
+  gap:.75rem;
+}
+
+@media (max-width: 768px){
+  /* Garante respiro no final da lista de cards de hábitos no mobile */
+  .habits-cards-mobile{
+    padding-bottom:1rem;
+  }
+
+  /* Ações dos cards mobile de hábitos: botões pill touch-friendly */
+  .habits-cards-mobile .habit-card-actions-mobile{
+    display:flex;
+    gap:0.75rem;
+    margin-top:0.75rem;
+  }
+
+  /* Status dos cards mobile: mesmo tamanho dos botões de ação */
+  .habits-cards-mobile .habit-status-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0.4rem 1.1rem;
+    border-radius:999px;
+    font-size:0.85rem;
+    font-weight:600;
+    min-width:120px;
+    border:2px solid transparent;
+    background:rgba(255,255,255,0.9);
+  }
+  .habits-cards-mobile .habit-status-concluido{
+    border-color:rgba(45,220,154,0.35);           /* mesmo verde do chip CONCLUÍDO */
+    color:var(--fh-primary, #2DDC9A);
+    background:rgba(45,220,154,0.08);
+  }
+  .habits-cards-mobile .habit-status-nao-concluido{
+    border-color:rgba(148,163,184,0.5);           /* cinza suave, alinhado ao pending */
+    color:#cbd5e1;
+    background:#f8fafc;
+  }
+}
+
+/* Botões de ação dos cards de hábitos (mobile + tablet) */
+.habits-cards-mobile .habit-card-actions-mobile{
+  display:flex;
+  gap:0.75rem;
+  margin-top:0.75rem;
+  flex-wrap:wrap; /* permite quebrar em telas muito estreitas */
+}
+
+.habits-cards-mobile .habit-action-btn{
+  padding:0.4rem 1.1rem;
+  border-radius:999px;
+  font-size:0.85rem;
+  font-weight:600;
+  border:1.5px solid transparent;
+  background:rgba(255,255,255,0.9);
+  cursor:pointer;
+  outline:none;
+  transition:0.2s ease;
+}
+.habits-cards-mobile .habit-action-btn:link,
+.habits-cards-mobile .habit-action-btn:visited{
+  text-decoration:none;
+}
+.habits-cards-mobile .habit-action-btn:hover,
+.habits-cards-mobile .habit-action-btn:focus-visible{
+  transform:translateY(-1px);
+  box-shadow:0 6px 12px rgba(0,0,0,0.12);
+}
+
+/* Editar – azul (mesmo tom usado originalmente no mobile) */
+.habits-cards-mobile .habit-action-btn--edit,
+.habits-cards-mobile .btn-habit-edit{
+  border-color:#2196f3;
+  color:#2196f3;
+  background:rgba(33,150,243,0.06);
+}
+
+/* Excluir – vermelho suave */
+.habits-cards-mobile .habit-action-btn--delete,
+.habits-cards-mobile .btn-habit-delete{
+  border-color:#f97373;
+  color:#f97373;
+  background:rgba(248,113,113,0.08);
+}
+
+/* Tema escuro para botões dos cards */
+:root[data-theme="dark"] .habits-page .habit-action-btn{
+  background:rgba(4,10,25,0.9);
+}
+:root[data-theme="dark"] .habits-page .habit-action-btn--edit,
+:root[data-theme="dark"] .habits-page .btn-habit-edit{
+  background:rgba(33,150,243,0.18);
+}
+:root[data-theme="dark"] .habits-page .habit-action-btn--delete,
+:root[data-theme="dark"] .habits-page .btn-habit-delete{
+  background:rgba(248,113,113,0.16);
+}
+
+/* Botões Editar/Excluir na tabela de hábitos (desktop) – mesmo estilo */
+.habits-page .fh-table-actions .fh-table-link{
+  padding:0.3rem 0.9rem;
+  border-radius:999px;
+  font-size:0.8rem;
+  font-weight:600;
+  border:1.5px solid transparent;
+  background:rgba(255,255,255,0.9);
+  cursor:pointer;
+  outline:none;
+  transition:0.2s ease;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.habits-page .fh-table-actions .fh-table-link:hover,
+.habits-page .fh-table-actions .fh-table-link:focus-visible{
+  transform:translateY(-1px);
+  box-shadow:0 6px 12px rgba(0,0,0,0.12);
+}
+
+/* Editar na tabela – azul (mesma cor dos cards mobile) */
+.habits-page .fh-table-actions .fh-table-link:not(.fh-table-link-danger),
+.habits-page .btn-habit-edit{
+  border-color:#2196f3;
+  color:#2196f3;
+  background:rgba(33,150,243,0.06);
+}
+
+/* Excluir na tabela – vermelho suave */
+.habits-page .fh-table-actions .fh-table-link-danger,
+.habits-page .btn-habit-delete{
+  border-color:#f97373;
+  color:#f97373;
+  background:rgba(248,113,113,0.08);
+}
+
+:root[data-theme="dark"] .habits-page .fh-table-actions .fh-table-link{
+  background:rgba(4,10,25,0.9);
+}
+:root[data-theme="dark"] .habits-page .fh-table-actions .fh-table-link:not(.fh-table-link-danger),
+:root[data-theme="dark"] .habits-page .btn-habit-edit{
+  background:rgba(33,150,243,0.18);
+}
+:root[data-theme="dark"] .habits-page .fh-table-actions .fh-table-link-danger,
+:root[data-theme="dark"] .habits-page .btn-habit-delete{
+  background:rgba(248,113,113,0.16);
+}
+
+/* -------------------------
+   Ajustes específicos mobile
+   ------------------------- */
+
+/* Hábitos + Dashboard: ajustes de layout no mobile (até tablets menores) */
+@media (max-width: 768px){
+  /* Dashboard: remove o espaçamento extra do bloco vazio antes do header
+     para alinhar "Progresso do Dia" com o topo da página de Hábitos */
+  .dashboard-page > .section[aria-live="polite"]{
+    margin:0;
+    padding:0;
+  }
+  /* Dashboard: cards colados nas laterais, com conteúdo alinhado ao padrão global */
+  .dashboard-page{
+    padding-left:0;
+    padding-right:0;
+  }
+  .dashboard-page.container{
+    width:100%;
+    max-width:none;
+  }
+  .dashboard-page .card{
+    margin-left:0;
+    margin-right:0;
+    width:100%;
+  }
+  .dashboard-page .card .card-content{
+    padding-left:var(--fh-page-padding-mobile);
+    padding-right:var(--fh-page-padding-mobile);
+  }
+  /* Card de progresso diário não usa .card-content, então aplicamos direto */
+  .dashboard-page .progress-summary-card{
+    padding-left:var(--fh-page-padding-mobile);
+    padding-right:var(--fh-page-padding-mobile);
+  }
+
+  /* Cards colados nas laterais, mantendo visual de vidro e o mesmo border-radius
+     padrão dos demais cards de vidro (definido em .app-glass-card) */
+  .page-habitos .card{
+    margin-left:0;
+    margin-right:0;
+    width:100%;
+  }
+  /* Conteúdo interno com mesmo recuo lateral dos títulos com barrinha verde */
+  .page-habitos .card .card-content,
+  .page-habitos .card-content{
+    padding-left:var(--fh-page-padding-mobile);
+    padding-right:var(--fh-page-padding-mobile);
+  }
+
+  /* Relatórios: cards colados nas laterais, com conteúdo alinhado ao padrão */
+  .reports-page{
+    padding-left:0;
+    padding-right:0;
+    width:100%;
+    max-width:none;
+  }
+  .calendar-card,
+  .chart-card{
+    margin-left:0;
+    margin-right:0;
+    width:100%;
+  }
+  .calendar-card .card-content,
+  .chart-card .card-content{
+    padding-left:var(--fh-page-padding-mobile);
+    padding-right:var(--fh-page-padding-mobile);
+  }
+  /* Título "Relatórios" alinhado com a mesma coluna dos demais títulos principais */
+  .reports-page > .section-header{
+    margin-left:var(--fh-page-padding-mobile);
+    margin-right:var(--fh-page-padding-mobile);
+  }
+}
+
+/* Card específico do gráfico de relatórios – ocupa toda a largura disponível */
+.relatorio-grafico-card{
+  max-width:100%;
+  width:100%;
+  box-sizing:border-box;
+}
+
+.relatorio-grafico-card .card-content{
+  padding-left:1rem;
+  padding-right:1rem;
+}
+
+@media (max-width: 600px){
+  .relatorio-grafico-card .card-content{
+    padding-left:0.5rem;
+    padding-right:0.5rem;
+  }
+  .grafico-container{
+    margin-inline:0;
+  }
 }
 
 /* Variante de header dentro de modal (menos margem inferior) */
@@ -247,8 +974,15 @@ h2{font-size:1.25rem; font-weight:600}
   align-items:center;
   gap:8px;
   flex-wrap:wrap;
-  margin-top:4rem;     /* respiro em relação ao bloco "Progresso do Dia" */
+  margin-top:8px;     /* respiro leve dentro do card de vidro */
   margin-bottom:.25rem;
+}
+
+/* Números grandes usados nas estatísticas (dashboard + perfil) */
+.dashboard-stat-number{
+  font-size:2rem;
+  font-weight:700;
+  letter-spacing:-0.01em;
 }
 
 /* Sub-linha animada na navbar (efeito de transição suave) */
@@ -359,6 +1093,28 @@ nav .nav-wrapper ul.right li a.nav-link-active::after{
   }
 }
 
+/* Container do gráfico de relatórios (página Relatórios) */
+.grafico-container,
+.reports-chart-container{
+  width:100%;
+  max-width:100%;
+  height:260px;
+  border:1px solid var(--fh-theme-border, #E5E7EB);
+  border-radius:12px;
+  background:var(--fh-theme-bg-card, #FFFFFF);
+  padding:12px;
+  box-sizing:border-box;
+}
+
+.grafico-container canvas,
+.reports-chart-container canvas{
+  width:100% !important;
+  max-width:100%;
+  display:block;
+  height:100%;
+  box-sizing:border-box;
+}
+
 /* Inputs */
 input[type=text],input[type=time],select{border-radius:.5rem}
 input:focus,textarea:focus,select:focus{border-bottom:1px solid var(--fh-primary)!important;box-shadow:0 1px 0 0 var(--fh-primary)!important}
@@ -389,6 +1145,125 @@ table.highlight>tbody>tr:hover{background:rgba(45,220,154,.08)}
 .mobile-bottom-nav a.active{color:#0A2419}
 @media (max-width:600px){ body{padding-bottom:88px} }
 
+/* Mobile + Tablet: usar bottom nav até 1400px e esconder nav de desktop */
+@media (min-width:601px) and (max-width:1400px){
+  .mobile-bottom-nav.hide-on-med-and-up{
+    display:block !important;
+  }
+  body{
+    padding-bottom:88px;
+  }
+
+  /* Esconde navegação de desktop (tabs horizontais do topo) */
+  nav .nav-wrapper .hide-on-med-and-down{
+    display:none !important;
+  }
+}
+
+/* Desktop grande: navbar única com blur na topbar, esconde bottom nav */
+@media (min-width:1401px){
+  .mobile-bottom-nav{
+    display:none !important;
+  }
+
+  /* topbar vira a navbar única no desktop */
+  .topbar.desktop-navbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:64px;
+    padding:0 32px;
+
+    /* fundo “invisível”: deixa a barra integrada ao fundo da página */
+    background-color:transparent;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    box-shadow:none;
+
+    position:sticky;
+    top:0;
+    z-index:30;
+  }
+
+  /* remove título central no desktop; fica só logo + links + switch/avatar */
+  .topbar.desktop-navbar .topbar-center,
+  .topbar.desktop-navbar .topbar-title{
+    display:none;
+  }
+
+  /* bloco esquerdo: logo + links */
+  .topbar.desktop-navbar .topbar-left{
+    display:flex;
+    align-items:center;
+    gap:32px;
+    padding-left:0;
+  }
+
+  .desktop-nav-links{
+    display:flex;
+    align-items:center;
+    gap:24px;
+  }
+
+  .desktop-nav-links .fh-nav-link{
+    position:relative;
+    color:#ffffff;
+    font-weight:500;
+    text-decoration:none;
+  }
+
+  .desktop-nav-links .fh-nav-link::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-8px;
+    height:3px;
+    border-radius:999px;
+    background:var(--fh-primary);
+    transform:scaleX(0);
+    transform-origin:left center;
+    transition:transform .25s ease;
+  }
+
+  .desktop-nav-links .fh-nav-link:hover::after,
+  .desktop-nav-links .fh-nav-link.nav-link-active::after{
+    transform:scaleX(1);
+  }
+
+  /* bloco direito: switch + avatar já usam .topbar-right; só garantir alinhamento */
+  .topbar.desktop-navbar .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+
+  /* não precisamos mais da barra extra de navegação por UL no desktop */
+  nav .nav-wrapper ul.right.hide-on-med-and-down{
+    display:none;
+  }
+}
+
+/* Ajustes específicos de TEMA para a navbar desktop (≥ 1401px) */
+@media (min-width:1401px){
+  /* Tema claro: usa exatamente o mesmo fundo do layout principal, sem sombra */
+  :root:not([data-theme="dark"]) .topbar.desktop-navbar{
+    background-color:var(--fh-theme-bg-main);
+    box-shadow:none;
+  }
+
+  /* Tema escuro: mesmo fundo da página, também sem sombra */
+  :root[data-theme="dark"] .topbar.desktop-navbar{
+    background-color:var(--fh-theme-bg-main);
+    box-shadow:none;
+  }
+
+  /* Garantir texto legível usando as cores já definidas do tema claro */
+  :root:not([data-theme="dark"]) .desktop-nav-links .fh-nav-link{
+    color:var(--fh-theme-nav-link);
+  }
+}
+
 /* ------------------------------------------------------------------
    Sistema de temas (claro/escuro) baseado em variáveis CSS
    ------------------------------------------------------------------ */
@@ -410,6 +1285,11 @@ table.highlight>tbody>tr:hover{background:rgba(45,220,154,.08)}
 
   --fh-theme-nav-link:#0A2419;
   --fh-theme-nav-link-active:#0A2419;
+
+  /* Fundo e borda para cards com efeito de vidro (perfil, etc.) */
+  --fh-glass-bg:linear-gradient(135deg, rgba(255,255,255,0.9), rgba(226,232,240,0.75));
+  --fh-glass-border:rgba(255,255,255,0.7);
+  --fh-glass-shadow:rgba(15,23,42,0.16);
 }
 
 /* Tema escuro */
@@ -429,6 +1309,11 @@ table.highlight>tbody>tr:hover{background:rgba(45,220,154,.08)}
 
   --fh-theme-nav-link:#E2E8F0;
   --fh-theme-nav-link-active:#FFFFFF;
+
+  /* Versão escura do efeito de vidro (mais translúcido e escuro) */
+  --fh-glass-bg:linear-gradient(135deg, rgba(15,23,42,0.82), rgba(15,23,42,0.6));
+  --fh-glass-border:rgba(148,163,184,0.45);
+  --fh-glass-shadow:rgba(0,0,0,0.55);
 }
 
 /* Aplica variáveis de tema nos elementos principais */

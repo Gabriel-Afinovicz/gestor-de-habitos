@@ -21,6 +21,89 @@
   };
 
   /**
+   * Converte uma data ISO (YYYY-MM-DD) para exibição como dd/MM/yyyy.
+   */
+  const isoToDisplayDate = (iso) => {
+    if (!iso) return '';
+    const d = parseISODate(iso);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  /**
+   * Converte uma data no formato dd/MM/yyyy para ISO (YYYY-MM-DD).
+   * Retorna string vazia se o formato não for válido.
+   */
+  const displayDateToISO = (value) => {
+    if (!value) return '';
+    const parts = value.split('/');
+    if (parts.length !== 3) return '';
+
+    const [dayStr, monthStr, yearStr] = parts;
+    const day = Number(dayStr);
+    const month = Number(monthStr);
+    const year = Number(yearStr);
+
+    if (!day || !month || !year) return '';
+
+    const d = new Date(year, month - 1, day);
+
+    // Validação simples para evitar datas inválidas (ex.: 31/02)
+    if (
+      d.getFullYear() !== year ||
+      d.getMonth() !== month - 1 ||
+      d.getDate() !== day
+    ) {
+      return '';
+    }
+
+    return d.toISOString().slice(0, 10);
+  };
+
+  /**
+   * Aplica máscara de data dd/mm/aaaa a um valor qualquer,
+   * mantendo apenas os dígitos e inserindo as barras automaticamente.
+   */
+  const formatDateMaskValue = (rawValue) => {
+    if (!rawValue) return '';
+    const digits = rawValue.replace(/\D/g, '').slice(0, 8); // ddmmAAAA
+
+    if (digits.length <= 2) {
+      return digits;
+    }
+
+    if (digits.length <= 4) {
+      return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    }
+
+    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+  };
+
+  /**
+   * Anexa comportamentos de máscara de data (input + paste) a um campo.
+   */
+  const attachDateMask = (input) => {
+    if (!input) return;
+
+    input.setAttribute('maxlength', '10');
+
+    input.addEventListener('input', () => {
+      const formatted = formatDateMaskValue(input.value);
+      input.value = formatted;
+    });
+
+    input.addEventListener('paste', (event) => {
+      event.preventDefault();
+      const clipboardData = event.clipboardData || window.clipboardData;
+      if (!clipboardData) return;
+
+      const text = clipboardData.getData('text') || '';
+      input.value = formatDateMaskValue(text);
+    });
+  };
+  /**
    * Formata uma data ISO em dd/MM.
    */
   const formatLabel = (iso) => {
@@ -183,16 +266,20 @@
 
         const isFutureDay = isCurrentMonth && iso > todayIso;
 
-        if (isFutureDay || !entry) {
-          // Dias futuros do mês atual OU dias sem dados disponíveis → apagados e desativados
+        if (isFutureDay) {
+          // Dias futuros do mês atual → apagados e desativados
           cell.classList.add('cal-future');
           cell.setAttribute('aria-disabled', 'true');
         } else {
-          // Dia com dados de hábitos → clicável e participa da seleção de intervalo
-          cell.dataset.iso = entry.iso;
+          // Dia clicável (mesmo que ainda não tenha dados de hábitos)
+          cell.dataset.iso = iso;
+
+          const label = entry ? entry.label : formatLabel(iso);
+          const percent = entry ? entry.percent : 0;
+
           cell.setAttribute(
             'aria-label',
-            `Dia ${entry.label} - ${entry.percent}% de hábitos concluídos`,
+            `Dia ${label} - ${percent}% de hábitos concluídos`,
           );
         }
 
@@ -288,6 +375,61 @@
       // Sem intervalo completo → volta ao padrão (últimos 30 dias)
       updateReportsChartDefault();
     }
+  };
+
+  /**
+   * Inicializa os controles de intervalo por data no layout mobile
+   * (inputs de texto com máscara + botão "Aplicar período"), reutilizando a
+   * mesma lógica de atualização de gráfico usada pelo calendário.
+   */
+  const initMobileDateRangeControls = () => {
+    const container = document.querySelector('.date-range-mobile');
+    if (!container) return;
+
+    const startInput = container.querySelector('#data-inicial');
+    const endInput = container.querySelector('#data-final');
+    const applyButton = container.querySelector('.btn-filtrar-periodo');
+
+    if (!startInput || !endInput || !applyButton) return;
+
+    // Pré-preenche com o mesmo intervalo padrão usado no gráfico (últimos 30 dias)
+    if (calendarData.length >= 1) {
+      const points = calendarData.slice(-30);
+      const first = points[0];
+      const last = points[points.length - 1];
+      if (first && last) {
+        startInput.value = isoToDisplayDate(first.iso);
+        endInput.value = isoToDisplayDate(last.iso);
+      }
+    }
+
+    // Aplica máscara de data dd/mm/aaaa a todos os campos de data do card mobile
+    const maskedInputs = container.querySelectorAll('.date-mask');
+    maskedInputs.forEach((input) => attachDateMask(input));
+
+    applyButton.addEventListener('click', () => {
+      const startIso = displayDateToISO(startInput.value);
+      const endIso = displayDateToISO(endInput.value);
+
+      // Só aplica se as duas datas estiverem preenchidas
+      if (!startIso || !endIso) {
+        return;
+      }
+
+      // Garante que dataInicial <= dataFinal
+      if (startIso > endIso) {
+        return;
+      }
+
+      selectedStart = startIso;
+      selectedEnd = endIso;
+
+      // Atualiza destaque visual no calendário (útil ao alternar para desktop)
+      updateCalendarSelectionStyles();
+
+      // Reaproveita a mesma função de atualização do gráfico do calendário
+      updateReportsChartForRange(startIso, endIso);
+    });
   };
 
   /**
@@ -447,14 +589,10 @@
     initCalendarInteractions();
     updateCalendarSelectionStyles();
     updateReportsChartDefault();
+    initMobileDateRangeControls();
   };
 
   document.addEventListener('DOMContentLoaded', initReportsPage);
-
-  // Exposição opcional para debugging
-  window.FitHabitReports = {
-    initReportsPage,
-  };
 })();
 
 

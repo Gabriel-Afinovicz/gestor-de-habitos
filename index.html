@@ -4,6 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FitHabit — Dashboard</title>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('fithabit-theme');
+          if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {
+          // se não conseguir ler o localStorage, não faz nada
+        }
+      })();
+    </script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
@@ -13,41 +27,53 @@
     <header class="navbar-fixed">
       <nav class="white" role="navigation" aria-label="Principal">
         <div class="nav-wrapper container">
-          <a href="index.html" class="brand-logo left">
-            <img src="assets/img/logo-fithabit.png" alt="FitHabit" class="navbar-logo-img" loading="eager">
-          </a>
-          <span class="mobile-page-title hide-on-med-and-up">Dashboard</span>
-          <ul class="right hide-on-med-and-down">
-            <li><a class="nav-link-active" href="index.html">Dashboard</a></li>
-            <li><a href="habitos.html">Hábitos</a></li>
-            <li><a href="relatorios.html">Relatórios</a></li>
-            <li class="navbar-theme-toggle">
-              <div class="theme-toggle-wrapper">
-                <label class="switch theme-toggle">
-                  <input
-                    type="checkbox"
-                    class="checkbox"
-                    id="themeToggleSwitch"
-                    aria-label="Alternar tema"
-                  />
-                  <div class="slider"></div>
-                </label>
+          <div class="topbar desktop-navbar">
+            <div class="topbar-left">
+              <a href="index.html" class="brand-logo">
+                <img
+                  id="logo-fithabit"
+                  src="assets/img/logo-fithabit.png"
+                  alt="FitHabit"
+                  class="navbar-logo-img topbar-logo"
+                  loading="eager"
+                >
+              </a>
+              <div class="desktop-nav-links hide-on-small-and-down">
+                <a href="index.html" class="fh-nav-link nav-link-active">Dashboard</a>
+                <a href="habitos.html" class="fh-nav-link">Hábitos</a>
+                <a href="relatorios.html" class="fh-nav-link">Relatórios</a>
               </div>
-            </li>
-            <li>
-              <a href="perfil.html" class="navbar-avatar-link">
+            </div>
+            <div class="topbar-center">
+              <h1 class="topbar-title">Dashboard</h1>
+            </div>
+            <div class="topbar-right">
+              <div class="navbar-theme-toggle">
+                <div class="theme-toggle-wrapper">
+                  <label class="switch theme-toggle">
+                    <input
+                      type="checkbox"
+                      class="checkbox"
+                      id="themeToggleSwitch"
+                      aria-label="Alternar tema"
+                    />
+                    <div class="slider"></div>
+                  </label>
+                </div>
+              </div>
+              <a href="perfil.html" class="navbar-avatar-link hide-on-small-and-down">
                 <div class="navbar-avatar" data-profile-avatar>
                   <i class="material-icons-round profile-avatar-icon">account_circle</i>
                 </div>
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </nav>
       
     </header>
 
-    <main class="page-content container">
+    <main class="page-content container dashboard-page">
       <div class="section" aria-live="polite"></div>
       <div class="section-header">
         <div class="section-header-accent" aria-hidden="true"></div>
@@ -59,33 +85,35 @@
         </div>
       </div>
       <section style="margin-bottom:1rem;">
-        <div class="row" style="align-items:center;">
-          <div class="col s12">
-            <div class="habits-header-row text-sub">
-              <span>Hábitos Concluídos</span>
-              <span class="use-tnum" data-habits-today-summary>
-                | Hoje: nenhum hábito cadastrado ainda
-              </span>
-            </div>
-          </div>
-          <div class="col s12">
-            <div class="progress-wrap" style="display:flex; align-items:center; gap:12px;">
-              <div class="progress" style="flex:1; margin:.25rem 0;" aria-label="Progresso diário">
-                <div class="determinate" style="width:75%" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75"></div>
+        <div class="card hoverable app-glass-card progress-summary-card">
+          <div class="row" style="align-items:center;">
+            <div class="col s12">
+              <div class="habits-header-row text-sub">
+                <span>Hábitos Concluídos</span>
+                <span class="use-tnum" data-habits-today-summary>
+                  | Hoje: nenhum hábito cadastrado ainda
+                </span>
               </div>
-              <span class="text-sub" style="white-space:nowrap;">75%</span>
+            </div>
+            <div class="col s12">
+              <div class="progress-wrap" style="display:flex; align-items:center; gap:12px;">
+                <div class="progress" style="flex:1; margin:.25rem 0;" aria-label="Progresso diário">
+                  <div class="determinate" style="width:75%" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75"></div>
+                </div>
+                <span class="text-sub" style="white-space:nowrap;">75%</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col s12" style="margin-top:.5rem;">
-            <a href="habitos.html" class="waves-effect waves-light btn-large btn-primary">
-              <i class="material-icons left">add</i>Criar Novo Hábito
-            </a>
+          <div class="row">
+            <div class="col s12" style="margin-top:.5rem;">
+              <a href="habitos.html" class="waves-effect waves-light btn-large btn-primary dashboard-cta-btn">
+                <i class="material-icons left">add</i>Criar Novo Hábito
+              </a>
+            </div>
           </div>
         </div>
       </section>
-      <div class="card hoverable">
+      <div class="card hoverable app-glass-card chart-card">
         <div class="card-content">
           <div class="section-header" style="margin-bottom:.75rem;">
             <div class="section-header-accent" aria-hidden="true"></div>
@@ -104,11 +132,39 @@
               </div>
             </div>
           </div>
-          <div class="habits-chart-container" style="border:1px solid #E5E7EB; border-radius:12px; background:#fff; padding:12px;">
+          <div class="habits-chart-container" style="border:1px solid var(--fh-theme-border, #E5E7EB); border-radius:12px; background:var(--fh-theme-bg-card, #fff); padding:12px;">
             <canvas id="habitsProgressChart" aria-label="Gráfico de progresso dos hábitos nos últimos 7 dias" role="img"></canvas>
           </div>
         </div>
       </div>
+
+      <!-- Estatísticas globais do dashboard (dias de treino / hábitos rastreados) -->
+      <section style="margin-top:1.75rem;">
+        <div class="section-header" style="margin-bottom:1rem;">
+          <div class="section-header-accent" aria-hidden="true"></div>
+          <div class="section-header-content">
+            <h2 class="section-header-title">Estatísticas</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 m6">
+            <div class="card app-glass-card stats-card">
+              <div class="card-content center-align">
+                <div class="use-tnum dashboard-stat-number" data-stats-training-days>0</div>
+                <div class="text-sub" style="margin-top:.25rem;">Dias de treino</div>
+              </div>
+            </div>
+          </div>
+          <div class="col s12 m6">
+            <div class="card app-glass-card stats-card">
+              <div class="card-content center-align">
+                <div class="use-tnum dashboard-stat-number" data-stats-tracked-habits>0</div>
+                <div class="text-sub" style="margin-top:.25rem;">Hábitos rastreados</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- Bottom Navigation (mobile only) -->

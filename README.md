@@ -2,6 +2,8 @@
 
 ### Autor: Gabriel Afinovicz
 
+## Sobre o Projeto
+
 Aplicação web responsiva para criar, monitorar e manter hábitos saudáveis ligados a emagrecimento (água, sono, passos, treino, alimentação consciente). O usuário cadastra hábitos, registra o que fez no dia, acompanha progresso, gráficos. Design limpo, foco em usabilidade e acessibilidade.
 
 #### Objetivo
@@ -20,13 +22,17 @@ https://www.figma.com/design/nU9CPcXy2UOZo5k63KLd14/Gestor-de-H%C3%A1bitos---Fit
 ## Design System:
 https://drive.google.com/file/d/1t0peynlAZ2YXLiLuXodLt71Fj9BkaQyb/view?usp=sharing
 
-## Site em Produção - GitHub Pages
+## GitHub Pages
+
+https://gabriel-afinovicz.github.io/gestor-de-habitos/
 
 ## Framework CSS
 Materialize
 
 ## Dependências JavaScript
----
+
+
+
 ## Checklist | Indicadores de Desempenho (ID) dos Resultados de Aprendizagem (RA)
 
 ### RA1 - Utilizar Frameworks CSS para estilização de elementos HTML e criação de layouts responsivos.
@@ -69,5 +75,15 @@ Materialize
 - [x] ID 24 - Realiza requisições assíncronas para APIs públicas reais (OpenWeather, ViaCEP etc.), exibindo os dados e tratando erros.
 
 # Manual de execução
+
+1 - Clonar o repositório
+
+2 - Instalar dependências: npm install
+
+3 - Rodar compilação de SCSS: npm run dev
+
+4 - Rodar API fake (JSON Server): npm run api
+
+5 - Abrir index.html com Live Server ou outro servidor estático
  
 # Telas da aplicação

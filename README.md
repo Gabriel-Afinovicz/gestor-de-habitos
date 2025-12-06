@@ -34,7 +34,8 @@ MaterializeCSS
 
 ## Dependências JavaScript
 
-###Script JSON Server
+### Script JSON Server
+
 {
   "scripts": {
     "dev": "sass src/scss:css --watch",
@@ -92,7 +93,7 @@ MaterializeCSS
 
 # Manual de execução
 #### Pré-requisitos
-- Ter Node.js e npm instalados na máquina.
+> Ter Node.js e npm instalados na máquina.
 ### 1. Clonar o repositório e entrar na pasta do projeto
  git clone https://github.com/Gabriel-Afinovicz/gestor-de-habitos.git   
  cd gestor-de-habitos

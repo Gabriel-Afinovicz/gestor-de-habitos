@@ -78,8 +78,6 @@ MaterializeCSS
 - [x] ID 24 - Realiza requisições assíncronas para APIs públicas reais (OpenWeather, ViaCEP etc.), exibindo os dados e tratando erros.
 
 # Manual de execução
-Para executar o projeto completo (frontend + API fake), você precisará rodar o frontend estático e o JSON Server localmente na sua máquina.
-
 #### Pré-requisitos
 - Ter Node.js e npm instalados na máquina.
 ### 1. Clonar o repositório e entrar na pasta do projeto

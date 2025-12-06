@@ -575,8 +575,10 @@
             <td>
               <button
                 type="button"
-                class="${statusClass}"
+                class="${statusClass} habit-status-chip"
                 data-action="toggle-status"
+                data-habit-id="${habit.id}"
+                data-status="${doneToday ? 'CONCLUIDO' : 'NAO_CONCLUIDO'}"
               >
                 ${statusText}
               </button>
@@ -592,8 +594,9 @@
                 </button>
                 <button
                   type="button"
-                  class="fh-table-link fh-table-link-danger"
+                  class="fh-table-link fh-table-link-danger btn-delete-habit"
                   data-action="delete-habit"
+                  data-habit-id="${habit.id}"
                 >
                   Excluir
                 </button>
@@ -640,8 +643,10 @@
               <h3 class="habit-card-title table-cell-wrap">${habit.nome}</h3>
               <button
                 type="button"
-                class="${statusClass} habit-status-badge ${statusVariantClass}"
+                class="${statusClass} habit-status-badge ${statusVariantClass} habit-status-chip"
                 data-action="toggle-status"
+                data-habit-id="${habit.id}"
+                data-status="${doneToday ? 'CONCLUIDO' : 'NAO_CONCLUIDO'}"
               >
                 ${statusText}
               </button>
@@ -661,8 +666,9 @@
                 </button>
                 <button
                   type="button"
-                  class="habit-action-btn habit-action-btn--delete"
+                  class="habit-action-btn habit-action-btn--delete btn-delete-habit"
                   data-action="delete-habit"
+                  data-habit-id="${habit.id}"
                 >
                   Excluir
                 </button>
@@ -674,6 +680,36 @@
       .join('');
 
     container.innerHTML = cardsHtml;
+  };
+
+  /**
+   * Sincroniza a lista de hábitos com a API fake (JSON Server), se disponível.
+   * Em caso de erro, mantém o comportamento atual baseado apenas em localStorage.
+   */
+  const syncHabitsFromApi = async () => {
+    if (!window.FitHabitApi || !window.FitHabitApi.getHabitos) return;
+
+    try {
+      const apiHabits = await window.FitHabitApi.getHabitos();
+      if (!Array.isArray(apiHabits) || !apiHabits.length) return;
+
+      const normalized = apiHabits.map((h, index) => ({
+        id: h.id ?? index + 1,
+        nome: h.nome ?? h.name ?? 'Hábito sem nome',
+        categoria: h.categoria ?? '',
+        criadoEm: h.criadoEm ?? new Date().toISOString(),
+        frequency: h.frequencia ?? h.frequency ?? '',
+        goal: h.objetivo ?? h.goal ?? '',
+        completedDates: Array.isArray(h.completedDates) ? h.completedDates : [],
+      }));
+
+      saveHabitsToStorage(normalized);
+      renderHabitsTable();
+      renderHabitsCardsMobile();
+      renderHabitsProgressChart();
+    } catch (error) {
+      console.warn('[FitHabit] Erro ao sincronizar hábitos com API fake:', error);
+    }
   };
 
   /**
@@ -693,14 +729,23 @@
     const frequencyInput = form.querySelector('#frequency');
     const goalInput = form.querySelector('#goal');
     const submitButton = form.querySelector('button[type="submit"]');
+    const api = window.FitHabitApi || null;
 
     // Render inicial da tabela (desktop) e dos cards (mobile, se houver container)
     renderHabitsTable();
     renderHabitsCardsMobile();
+    // Tenta buscar hábitos da API fake e sincronizar com o localStorage
+    syncHabitsFromApi();
 
     // Envio do formulário de criação/edição de hábito
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
+
+      // Usa validação nativa do HTML5 para exibir mensagens próximas aos campos
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
 
       const nome = nameInput.value.trim();
       const frequency = frequencyInput.value.trim();
@@ -709,21 +754,60 @@
       if (!nome) return;
 
       if (editingHabitId) {
-        // Atualiza hábito existente
+        // Atualiza hábito existente no localStorage
         updateHabitInStorage(editingHabitId, {
           nome,
           frequency,
           goal,
         });
+
+        // Tenta refletir a alteração na API fake (se disponível)
+        if (api && api.updateHabito) {
+          try {
+            await api.updateHabito(editingHabitId, {
+              nome,
+              frequencia: frequency,
+              objetivo: goal,
+              status: 'NAO_CONCLUIDO',
+            });
+          } catch (error) {
+            console.warn('[FitHabit] Erro ao atualizar hábito na API fake:', error);
+          }
+        }
       } else {
         // Cria o objeto de hábito no formato esperado
-        addHabitToStorage({
+        const newHabit = {
           nome,
           categoria: '',
           frequency,
           goal,
           completedDates: [],
-        });
+        };
+
+        // Tenta criar o hábito também na API fake para obter um ID consistente
+        if (api && api.createHabito) {
+          try {
+            const created = await api.createHabito({
+              nome,
+              frequencia: frequency,
+              objetivo: goal,
+              status: 'NAO_CONCLUIDO',
+            });
+            if (created && typeof created.id !== 'undefined') {
+              newHabit.id = created.id;
+            }
+          } catch (error) {
+            console.warn('[FitHabit] Erro ao criar hábito na API fake:', error);
+            if (window.M && M.toast) {
+              M.toast({
+                text: 'Não foi possível sincronizar com a API. O hábito foi salvo apenas neste navegador.',
+                classes: 'rounded',
+              });
+            }
+          }
+        }
+
+        addHabitToStorage(newHabit);
       }
 
       // Limpa o formulário, zera modo edição e re-renderiza a lista
@@ -741,7 +825,7 @@
     });
 
     // Delegação de eventos na tabela: status, editar e excluir (desktop)
-    tbody.addEventListener('click', (event) => {
+    tbody.addEventListener('click', async (event) => {
       const target = event.target;
 
       const row = target.closest('tr[data-habit-id]');
@@ -756,6 +840,22 @@
         renderHabitsTable();
         renderHabitsCardsMobile();
         renderHabitsProgressChart();
+
+        // Atualiza também o campo "status" na API fake, se disponível
+        if (api && api.updateHabitStatus) {
+          try {
+            const habitsAfter = getHabitsFromStorage();
+            const habitAfter = habitsAfter.find((h) => String(h.id) === String(habitId));
+            if (habitAfter) {
+              const today = getTodayISODate();
+              const doneNow = (habitAfter.completedDates || []).includes(today);
+              const newStatus = doneNow ? 'CONCLUIDO' : 'NAO_CONCLUIDO';
+              await api.updateHabitStatus(habitId, newStatus);
+            }
+          } catch (error) {
+            console.warn('[FitHabit] Erro ao atualizar status na API fake:', error);
+          }
+        }
         return;
       }
 
@@ -785,6 +885,15 @@
         const confirmed = window.confirm('Deseja realmente excluir este hábito?');
         if (!confirmed) return;
 
+        // Remove primeiro na API fake, depois no localStorage
+        if (api && api.deleteHabit) {
+          try {
+            await api.deleteHabit(habitId);
+          } catch (error) {
+            console.warn('[FitHabit] Erro ao excluir hábito na API fake:', error);
+          }
+        }
+
         deleteHabitFromStorage(habitId);
 
         // Se estava editando este hábito, cancela o modo edição
@@ -804,7 +913,7 @@
 
     // Delegação de eventos nos cards mobile: status, editar e excluir
     if (mobileCardsContainer) {
-      mobileCardsContainer.addEventListener('click', (event) => {
+      mobileCardsContainer.addEventListener('click', async (event) => {
         const target = event.target;
         const card = target.closest('.habit-card[data-habit-id]');
         if (!card) return;
@@ -818,6 +927,22 @@
           renderHabitsTable();
           renderHabitsCardsMobile();
           renderHabitsProgressChart();
+
+          if (api && api.updateHabitStatus) {
+            try {
+              const habitsAfter = getHabitsFromStorage();
+              const habitAfter = habitsAfter.find((h) => String(h.id) === String(habitId));
+              if (habitAfter) {
+                const today = getTodayISODate();
+                const doneNow = (habitAfter.completedDates || []).includes(today);
+                const newStatus = doneNow ? 'CONCLUIDO' : 'NAO_CONCLUIDO';
+                await api.updateHabitStatus(habitId, newStatus);
+              }
+            } catch (error) {
+              console.warn('[FitHabit] Erro ao atualizar status na API fake:', error);
+            }
+          }
+
           return;
         }
 
@@ -845,6 +970,14 @@
         if (target.closest('[data-action="delete-habit"]')) {
           const confirmed = window.confirm('Deseja realmente excluir este hábito?');
           if (!confirmed) return;
+
+          if (api && api.deleteHabit) {
+            try {
+              await api.deleteHabit(habitId);
+            } catch (error) {
+              console.warn('[FitHabit] Erro ao excluir hábito na API fake:', error);
+            }
+          }
 
           deleteHabitFromStorage(habitId);
 

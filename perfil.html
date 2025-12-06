@@ -117,6 +117,33 @@
               <input id="profileBio" type="text" required>
               <label for="profileBio">Descrição de perfil</label>
             </div>
+            <!-- Campos de endereço (usados com API ViaCEP) -->
+            <div class="input-field">
+              <input id="profileCep" type="text" maxlength="9" placeholder="00000-000">
+              <label for="profileCep">CEP</label>
+              <div id="cep-error" class="cep-error-message is-hidden" aria-live="polite"></div>
+            </div>
+            <div class="input-field">
+              <input id="profileLogradouro" type="text">
+              <label for="profileLogradouro">Logradouro</label>
+            </div>
+            <div class="input-field">
+              <input id="profileBairro" type="text">
+              <label for="profileBairro">Bairro</label>
+            </div>
+            <div class="input-field">
+              <input id="profileCidade" type="text">
+              <label for="profileCidade">Cidade</label>
+            </div>
+            <div class="input-field">
+              <input id="profileUf" type="text" maxlength="2">
+              <label for="profileUf">UF</label>
+            </div>
+            <div class="input-field">
+              <button type="button" id="btnBuscarCep" class="btn btn-secondary">
+                Buscar CEP
+              </button>
+            </div>
             <div class="file-field input-field">
               <div class="btn btn-primary">
                 <span>Selecionar foto</span>
@@ -148,10 +175,15 @@
     </nav>
     
 
-    <!-- Materialize JS, tema, perfil e demais scripts -->
+    <!-- jQuery + plugin de máscara (para CEP) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+    <!-- Materialize JS, tema, perfil e scripts complementares -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/profile.js"></script>
+    <script src="assets/js/profile-jquery.js"></script>
   </body>
 </html>
 

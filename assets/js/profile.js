@@ -104,6 +104,79 @@
     const bioInput = form.querySelector('#profileBio');
     const photoInput = form.querySelector('#profilePhotoInput');
 
+    // Campos de endereço (API ViaCEP)
+    const cepInput = form.querySelector('#profileCep');
+    const logradouroInput = form.querySelector('#profileLogradouro');
+    const bairroInput = form.querySelector('#profileBairro');
+    const cidadeInput = form.querySelector('#profileCidade');
+    const ufInput = form.querySelector('#profileUf');
+    const cepErrorEl = document.getElementById('cep-error');
+
+    const CEP_REGEX = /^[0-9]{5}-?[0-9]{3}$/;
+
+    const clearAddressFields = () => {
+      if (logradouroInput) logradouroInput.value = '';
+      if (bairroInput) bairroInput.value = '';
+      if (cidadeInput) cidadeInput.value = '';
+      if (ufInput) ufInput.value = '';
+    };
+
+    const showCepError = (message) => {
+      if (!cepErrorEl) return;
+      cepErrorEl.textContent = message;
+      cepErrorEl.classList.remove('is-hidden');
+    };
+
+    const clearCepError = () => {
+      if (!cepErrorEl) return;
+      cepErrorEl.textContent = '';
+      cepErrorEl.classList.add('is-hidden');
+    };
+
+    const buscarCep = async () => {
+      if (!cepInput) return;
+      const rawCep = (cepInput.value || '').trim();
+
+      // Validação com REGEX (ID 12)
+      if (!CEP_REGEX.test(rawCep)) {
+        clearAddressFields();
+        showCepError('CEP inválido. Verifique e tente novamente.');
+        return;
+      }
+
+      clearCepError();
+
+      const cepSomenteNumeros = rawCep.replace(/\D/g, '');
+
+      try {
+        const resp = await fetch(`https://viacep.com.br/ws/${cepSomenteNumeros}/json/`);
+        if (!resp.ok) throw new Error('Erro na requisição');
+
+        const data = await resp.json();
+        if (data.erro) throw new Error('CEP não encontrado');
+
+        if (logradouroInput) logradouroInput.value = data.logradouro || '';
+        if (bairroInput) bairroInput.value = data.bairro || '';
+        if (cidadeInput) cidadeInput.value = data.localidade || '';
+        if (ufInput) ufInput.value = data.uf || '';
+
+        if (window.M && M.updateTextFields) {
+          M.updateTextFields();
+        }
+
+        // Busca bem-sucedida: remove qualquer mensagem de erro prévia
+        clearCepError();
+      } catch (error) {
+        clearAddressFields();
+        console.error('[FitHabitProfile] Erro ao buscar CEP:', error);
+        if (error && error.message === 'CEP não encontrado') {
+          showCepError('CEP não encontrado. Tente outro CEP.');
+        } else {
+          showCepError('Não foi possível buscar o CEP. Tente novamente.');
+        }
+      }
+    };
+
     // Preenche campos com os valores atuais
     if (nameInput) nameInput.value = profile.name || '';
     if (bioInput) bioInput.value = profile.bio || '';
@@ -111,6 +184,23 @@
     // Atualiza labels do Materialize
     if (window.M && M.updateTextFields) {
       M.updateTextFields();
+    }
+
+    // Eventos para busca de CEP (API pública ViaCEP)
+    const cepButton = form.querySelector('#btnBuscarCep');
+    if (cepButton && cepInput) {
+      cepButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        buscarCep();
+      });
+    }
+
+    if (cepInput) {
+      cepInput.addEventListener('blur', () => {
+        if (cepInput.value.trim().length >= 9) {
+          buscarCep();
+        }
+      });
     }
 
     form.addEventListener('submit', (event) => {

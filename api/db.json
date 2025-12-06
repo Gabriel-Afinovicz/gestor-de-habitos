@@ -1,0 +1,11 @@
+{
+  "habitos": [
+    {
+      "nome": "Beber 2L",
+      "frequencia": "Todos os dias",
+      "objetivo": "Melhorar hidratação",
+      "status": "NAO_CONCLUIDO",
+      "id": 1
+    }
+  ]
+}

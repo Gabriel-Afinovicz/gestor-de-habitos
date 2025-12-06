@@ -119,5 +119,3 @@ MaterializeCSS
 <img width="1920" height="911" alt="tela 2" src="https://github.com/user-attachments/assets/b44d9697-d692-46c7-b905-1d29e356dc8a" />
 <img width="1920" height="1373" alt="tela 3" src="https://github.com/user-attachments/assets/1556a9af-3ee6-4cb4-93fa-af4e85abb773" />
 <img width="1920" height="911" alt="tela 4" src="https://github.com/user-attachments/assets/ca176b23-634f-491b-a0a2-cb878e40460a" />
-
-

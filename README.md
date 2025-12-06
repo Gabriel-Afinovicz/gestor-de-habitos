@@ -15,11 +15,13 @@ Ajudar o usuário a ganhar consistência em hábitos que impactam o emagreciment
 Pessoas que querem emagrecer com hábitos diários (iniciante a intermediário), sem dietas extremas.
 
 ## Design das Telas - Figma: 
+
 ### Prévia Finalizada
 
 https://www.figma.com/design/nU9CPcXy2UOZo5k63KLd14/Gestor-de-H%C3%A1bitos---FitTrack?node-id=0-1&t=Y0BHTYdTWUM31EGW-1
 
 ## Design System:
+
 https://drive.google.com/file/d/1v5LPiYX8smAZNP0LOeXyUuCSwrIM0pkZ/view?usp=sharing
 
 ## GitHub Pages
@@ -27,7 +29,8 @@ https://drive.google.com/file/d/1v5LPiYX8smAZNP0LOeXyUuCSwrIM0pkZ/view?usp=shari
 https://gabriel-afinovicz.github.io/gestor-de-habitos/
 
 ## Framework CSS
-Materialize
+
+MaterializeCSS
 
 ## Dependências JavaScript
 
@@ -76,14 +79,19 @@ Materialize
 
 # Manual de execução
 
-1 - Clonar o repositório
-
-2 - Instalar dependências: npm install
-
-3 - Rodar compilação de SCSS: npm run dev
-
-4 - Rodar API fake (JSON Server): npm run api
-
-5 - Abrir index.html com Live Server ou outro servidor estático
+Para executar o projeto completo (frontend + API fake), você precisará rodar o frontend estático e o JSON Server localmente na sua máquina.
+#### Pré-requisitos
+- Ter Node.js e npm instalados na máquina.
+### 1. Clonar o repositório e entrar na pasta do projeto
+ (git clone https://github.com/Gabriel-Afinovicz/gestor-de-habitos.git   
+ cd gestor-de-habitos)
+### 2. Instalar as dependências do projeto
+   npm install
+### 3. Rodar o script de desenvolvimento do SCSS (watcher)
+   npm run dev
+### 4. Rodar o JSON Server (API fake)
+   npm run api
+### 5. Abrir a aplicação frontend no navegador
+- Recomenda-se usar a extensão Live Server do VS Code (ou outro servidor estático similar) para servir o arquivo index.html na raiz do projeto.
  
 # Telas da aplicação

@@ -20,7 +20,7 @@ Pessoas que querem emagrecer com hábitos diários (iniciante a intermediário),
 https://www.figma.com/design/nU9CPcXy2UOZo5k63KLd14/Gestor-de-H%C3%A1bitos---FitTrack?node-id=0-1&t=Y0BHTYdTWUM31EGW-1
 
 ## Design System:
-https://drive.google.com/file/d/1t0peynlAZ2YXLiLuXodLt71Fj9BkaQyb/view?usp=sharing
+https://drive.google.com/file/d/1v5LPiYX8smAZNP0LOeXyUuCSwrIM0pkZ/view?usp=sharing
 
 ## GitHub Pages
 

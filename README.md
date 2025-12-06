@@ -34,6 +34,19 @@ MaterializeCSS
 
 ## Dependências JavaScript
 
+###Script JSON Server
+{
+  "scripts": {
+    "dev": "sass src/scss:css --watch",
+    "build": "sass src/scss:css --style=compressed && postcss css/*.css -u autoprefixer -r",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d .",
+    "api": "json-server --watch api/db.json --port 3000",
+    "lint": "eslint assets/js/**/*.js"
+  }
+}
+
+> O JSON Server é usado como uma API fake para o projeto e é executado localmente na máquina via npm run api. Em ambientes como o GitHub Pages, apenas o front-end estático (HTML/CSS/JS) é servido, sem o servidor JSON, então as requisições à API fake só funcionarão quando o JSON Server estiver rodando localmente.
 
 
 ## Checklist | Indicadores de Desempenho (ID) dos Resultados de Aprendizagem (RA)

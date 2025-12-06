@@ -47,6 +47,13 @@ MaterializeCSS
   }
 }
 
+< npm run dev: observa os arquivos SCSS em src/scss e gera o CSS na pasta css em modo de desenvolvimento (watch).
+< npm run build: compila o SCSS de src/scss para css em modo comprimido e aplica o PostCSS/Autoprefixer nos arquivos css/*.css para gerar CSS otimizado para produção.
+< npm run predeploy: executa automaticamente o npm run build antes do deploy.
+< npm run deploy: publica o conteúdo do projeto na branch de GitHub Pages usando o diretório atual (.) como base.
+< npm run api: sobe o JSON Server observando o arquivo api/db.json e disponibiliza a API fake em http://localhost:3000.
+< npm run lint: executa o ESLint nos arquivos JavaScript dentro de assets/js/**/*.js para verificar problemas de código/estilo.
+
 > O JSON Server é usado como uma API fake para o projeto e é executado localmente na máquina via npm run api. Em ambientes como o GitHub Pages, apenas o front-end estático (HTML/CSS/JS) é servido, sem o servidor JSON, então as requisições à API fake só funcionarão quando o JSON Server estiver rodando localmente.
 
 

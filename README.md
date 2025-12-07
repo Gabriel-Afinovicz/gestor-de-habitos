@@ -36,17 +36,6 @@ MaterializeCSS
 
 ### Script JSON Server
 
-{
-  "scripts": {
-    "dev": "sass src/scss:css --watch",
-    "build": "sass src/scss:css --style=compressed && postcss css/*.css -u autoprefixer -r",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d .",
-    "api": "json-server --watch api/db.json --port 3000",
-    "lint": "eslint assets/js/**/*.js"
-  }
-}
-
 - npm run dev: observa os arquivos SCSS em src/scss e gera o CSS na pasta css em modo de desenvolvimento (watch).
 - npm run build: compila o SCSS de src/scss para css em modo comprimido e aplica o PostCSS/Autoprefixer nos arquivos css/*.css para gerar CSS otimizado para produção.
 - npm run predeploy: executa automaticamente o npm run build antes do deploy.
